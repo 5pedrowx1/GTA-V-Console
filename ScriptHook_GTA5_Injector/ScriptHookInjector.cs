@@ -53,36 +53,48 @@ namespace ScriptHook_GTA5_Injector
 
                 CheckGameDirectoryIntegrity(processInfo.Directory);
 
-                var scriptHookPath = FindScriptHookDLL(processInfo.Directory);
-                if (string.IsNullOrEmpty(scriptHookPath))
+                if (IsModuleLoaded(processInfo.Process, "ScriptHookV.dll"))
                 {
-                    SuggestScriptHookInstallation();
-                    return InjectionResult.DllNotFound;
+                    Logger.Success("ScriptHookV já está carregado!");
+                }
+                else
+                {
+                    var scriptHookPath = FindScriptHookDLL(processInfo.Directory);
+                    if (string.IsNullOrEmpty(scriptHookPath))
+                    {
+                        SuggestScriptHookInstallation();
+                        return InjectionResult.DllNotFound;
+                    }
+
+                    if (!VerifyDLL(scriptHookPath))
+                    {
+                        Logger.Error("ScriptHookV.dll parece estar corrompido!");
+                        return InjectionResult.DllCorrupted;
+                    }
+
+                    Logger.Info($"Injetando ScriptHookV: {Path.GetFileName(scriptHookPath)}");
+                    var injectionResult = await InjectDLLAsync(processInfo.Process, scriptHookPath);
+
+                    if (injectionResult != InjectionResult.Success)
+                    {
+                        Logger.Error("Falha ao injetar ScriptHookV.dll");
+                        return injectionResult;
+                    }
+
+                    Logger.Success("ScriptHookV injetado com sucesso!");
                 }
 
-                if (!VerifyDLL(scriptHookPath))
-                {
-                    Logger.Error("ScriptHookV.dll parece estar corrompido!");
-                    return InjectionResult.DllCorrupted;
-                }
-
-                Logger.Info($"Injetando ScriptHookV: {Path.GetFileName(scriptHookPath)}");
-                var injectionResult = await InjectDLLAsync(processInfo.Process, scriptHookPath);
-
-                if (injectionResult != InjectionResult.Success)
-                {
-                    Logger.Error("Falha ao injetar ScriptHookV.dll");
-                    return injectionResult;
-                }
-
-                Logger.Success("ScriptHookV injetado com sucesso!");
-
-                var initialized = await WaitForInitializationAsync(processInfo);
+                Logger.Info("Aguardando inicialização completa do ScriptHookV...");
+                var initialized = await WaitForScriptHookInitializationAsync(processInfo);
                 if (!initialized)
                 {
-                    Logger.Warning("ScriptHookV pode não ter inicializado completamente.");
+                    Logger.Error("ScriptHookV não inicializou corretamente. DotNet não pode ser carregado.");
+                    return InjectionResult.InitializationTimeout;
                 }
 
+                Logger.Success("ScriptHookV inicializado com sucesso!");
+
+                await Task.Delay(2000);
                 await TryInjectDotNetAsync(processInfo);
 
                 return InjectionResult.Success;
@@ -188,7 +200,8 @@ namespace ScriptHook_GTA5_Injector
             var scriptsDir = Path.Combine(gameDir, "scripts");
             if (Directory.Exists(scriptsDir))
             {
-                var scriptCount = Directory.GetFiles(scriptsDir, "*.dll").Length;
+                var scriptCount = Directory.GetFiles(scriptsDir, "*.dll").Length +
+                                Directory.GetFiles(scriptsDir, "*.asi").Length;
                 Logger.Success($"✓ Pasta scripts ({scriptCount} arquivos)");
             }
             else
@@ -346,27 +359,45 @@ namespace ScriptHook_GTA5_Injector
             });
         }
 
-        private async Task<bool> WaitForInitializationAsync(ProcessInfo processInfo)
+        private async Task<bool> WaitForScriptHookInitializationAsync(ProcessInfo processInfo)
         {
             var logPath = Path.Combine(processInfo.Directory, "ScriptHookV.log");
             var cancellation = new CancellationTokenSource(config.InitializationTimeout);
 
-            Logger.Info("Aguardando inicialização do ScriptHookV...");
+            Logger.Info("Aguardando inicialização completa do ScriptHookV...");
 
             try
             {
+                var lastLogSize = 0L;
+                var stableCount = 0;
+
                 while (!cancellation.Token.IsCancellationRequested)
                 {
-                    if (IsModuleLoaded(processInfo.Process, "ScriptHookV.dll"))
+                    if (!IsModuleLoaded(processInfo.Process, "ScriptHookV.dll"))
                     {
-                        if (await CheckLogForInitializationAsync(logPath))
-                        {
-                            Logger.Success("ScriptHookV inicializado com sucesso!");
-                            return true;
-                        }
+                        await Task.Delay(500, cancellation.Token);
+                        continue;
                     }
 
-                    await Task.Delay(700, cancellation.Token);
+                    var logInitialized = await CheckScriptHookLogAsync(logPath);
+
+                    var currentLogSize = File.Exists(logPath) ? new FileInfo(logPath).Length : 0;
+                    if (currentLogSize == lastLogSize)
+                    {
+                        stableCount++;
+                    }
+                    else
+                    {
+                        stableCount = 0;
+                        lastLogSize = currentLogSize;
+                    }
+
+                    if (logInitialized && stableCount >= 3)
+                    {
+                        return true;
+                    }
+
+                    await Task.Delay(1000, cancellation.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -377,28 +408,30 @@ namespace ScriptHook_GTA5_Injector
             return false;
         }
 
-        private async Task<bool> CheckLogForInitializationAsync(string logPath)
+        private async Task<bool> CheckScriptHookLogAsync(string logPath)
         {
             if (!File.Exists(logPath)) return false;
 
             try
             {
                 var lines = await Task.Run(() => File.ReadAllLines(logPath));
-                var recentLines = lines.Skip(Math.Max(0, lines.Length - 30)).Take(30);
+                var recentLines = lines.Skip(Math.Max(0, lines.Length - 50)).Take(50);
 
                 foreach (var line in recentLines)
                 {
-                    if (line.IndexOf("INIT:", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        line.IndexOf("Success", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        line.IndexOf("Started", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (line.IndexOf("INIT: Pool", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        line.IndexOf("INIT: Game", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        line.IndexOf("Started", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        line.IndexOf("Initialization", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
+                        Logger.Info($"ScriptHookV Log: {line.Trim()}");
                         return true;
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignorar erros de I/O
+                Logger.Warning($"Erro lendo log: {ex.Message}");
             }
 
             return false;
@@ -406,29 +439,70 @@ namespace ScriptHook_GTA5_Injector
 
         private async Task TryInjectDotNetAsync(ProcessInfo processInfo)
         {
+            Logger.Info("=== INJEÇÃO DO SCRIPTHOOKDOTNET ===");
+
             var dotNetPath = FindDotNetDLL(processInfo.Directory);
 
             if (string.IsNullOrEmpty(dotNetPath))
             {
-                Logger.Warning("ScriptHookDotNet não encontrado automaticamente");
+                Logger.Warning("ScriptHookDotNet não encontrado");
+                SuggestDotNetInstallation();
                 return;
             }
 
-            Logger.Info($"Tentando injetar DotNet: {Path.GetFileName(dotNetPath)}");
+            Logger.Info($"Encontrado: {Path.GetFileName(dotNetPath)}");
+
+            var moduleName = Path.GetFileName(dotNetPath);
+            if (IsModuleLoaded(processInfo.Process, moduleName))
+            {
+                Logger.Success("ScriptHookDotNet já está carregado!");
+                return;
+            }
+
+            Logger.Info("Injetando ScriptHookDotNet...");
             var result = await InjectDLLAsync(processInfo.Process, dotNetPath);
 
             if (result == InjectionResult.Success)
             {
                 Logger.Success("ScriptHookDotNet injetado com sucesso!");
+
+                await Task.Delay(3000);
+
+                if (IsModuleLoaded(processInfo.Process, moduleName))
+                {
+                    Logger.Success("ScriptHookDotNet confirmado como carregado!");
+                    Logger.Success("Tente pressionar F4 para abrir o console no jogo.");
+                }
+                else
+                {
+                    Logger.Warning("ScriptHookDotNet pode não ter carregado corretamente.");
+                }
             }
             else
             {
-                Logger.Warning("Falha ao injetar ScriptHookDotNet");
+                Logger.Error($"Falha ao injetar ScriptHookDotNet: {result}");
             }
         }
 
         private string FindDotNetDLL(string gameDirectory)
         {
+            var asiVariants = new[]
+            {
+                "ScriptHookVDotNet3.asi",
+                "ScriptHookVDotNet.asi",
+                "ScriptHookVDotNet2.asi"
+            };
+
+            foreach (var variant in asiVariants)
+            {
+                var path = Path.Combine(gameDirectory, variant);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+            }
+
+            // Depois procurar por DLLs
             foreach (var variant in config.DotNetVariants)
             {
                 var path = Path.Combine(gameDirectory, variant);
@@ -438,7 +512,8 @@ namespace ScriptHook_GTA5_Injector
                 }
             }
 
-            return SearchFileRecursive(gameDirectory, "ScriptHookDotNet.asi", 2);
+            return SearchFileRecursive(gameDirectory, "ScriptHookVDotNet*.asi", 2) ??
+                   SearchFileRecursive(gameDirectory, "ScriptHookVDotNet*.dll", 2);
         }
 
         private static bool IsRunningAsAdmin()
@@ -492,6 +567,7 @@ namespace ScriptHook_GTA5_Injector
         {
             try
             {
+                process.Refresh(); 
                 return process.Modules.Cast<ProcessModule>()
                     .Any(module => string.Equals(Path.GetFileName(module.FileName),
                         moduleName, StringComparison.OrdinalIgnoreCase));
@@ -531,6 +607,15 @@ namespace ScriptHook_GTA5_Injector
             Logger.Info("1. Baixe de: http://www.dev-c.com/gtav/scripthookv/");
             Logger.Info("2. Extraia ScriptHookV.dll para a pasta do GTA V");
             Logger.Info("3. Certifique-se de usar a versão compatível");
+        }
+
+        private static void SuggestDotNetInstallation()
+        {
+            Logger.Info("=== INSTALAÇÃO DO SCRIPTHOOKDOTNET ===");
+            Logger.Info("1. Baixe de: https://github.com/crosire/scripthookvdotnet/releases");
+            Logger.Info("2. Extraia ScriptHookVDotNet.asi para a pasta do GTA V");
+            Logger.Info("3. Instale Visual C++ Redistributable");
+            Logger.Info("4. Instale .NET Framework 4.8 ou superior");
         }
     }
 }
