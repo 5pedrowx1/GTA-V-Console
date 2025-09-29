@@ -54,6 +54,7 @@
             txtOut.Font = new Font("Segoe UI", 9F);
             txtOut.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
             txtOut.Location = new Point(12, 48);
+            txtOut.Multiline = true;
             txtOut.Name = "txtOut";
             txtOut.PlaceholderText = "";
             txtOut.ReadOnly = true;
@@ -87,7 +88,7 @@
             BtnClose.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             BtnClose.DisabledState.FillColor2 = Color.FromArgb(169, 169, 169);
             BtnClose.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            BtnClose.FillColor = Color.Red;
+            BtnClose.FillColor = Color.Purple;
             BtnClose.Font = new Font("Comic Sans MS", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             BtnClose.ForeColor = Color.White;
             BtnClose.Location = new Point(472, 12);
