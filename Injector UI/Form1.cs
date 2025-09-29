@@ -793,5 +793,10 @@ namespace Injector_UI
 
             return null;
         }
+
+        private void BtnMinimize_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
