@@ -25,6 +25,7 @@ namespace Console_With_Windows_Forms
 
             KeyDown += OnKeyDown;
             Notification.Show("~y~GTAV Console~w~ carregado! Pressiona ~b~F10~w~ para abrir.");
+            G
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
