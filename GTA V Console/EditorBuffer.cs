@@ -7,90 +7,108 @@ namespace GTA_V_Console
     {
         public List<string> CodeLines { get; private set; } = new List<string>();
         public bool HasUnsavedChanges { get; set; } = false;
-        public int CursorLine { get; private set; } = 0;
-        public int CursorColumn { get; private set; } = 0;
-        public int OutputScroll { get; private set; } = 0;
-
-        public string TextContent
-        {
-            get => string.Join("\n", CodeLines);
-            set
-            {
-                CodeLines = new List<string>(value.Split('\n'));
-                HasUnsavedChanges = true;
-            }
-        }
+        public int CursorLine { get; set; } = 0;
+        public int CursorColumn { get; set; } = 0;
 
         public void InitializeTemplate()
         {
             CodeLines.Clear();
-            CodeLines.Add("using GTA;");
-            CodeLines.Add("using GTA.Native;");
-            CodeLines.Add("using System;");
-            CodeLines.Add("");
-            CodeLines.Add("public class UserScript : Script");
-            CodeLines.Add("{");
-            CodeLines.Add("    public UserScript()");
-            CodeLines.Add("    {");
-            CodeLines.Add("        Tick += OnTick;");
-            CodeLines.Add("    }");
-            CodeLines.Add("");
-            CodeLines.Add("    private void OnTick(object sender, EventArgs e)");
-            CodeLines.Add("    {");
-            CodeLines.Add("        // Seu código aqui");
-            CodeLines.Add("    }");
-            CodeLines.Add("}");
+            CodeLines.AddRange(new[]
+            {
+                "using GTA;",
+                "using GTA.Native;",
+                "using System;",
+                "",
+                "public class UserScript : Script",
+                "{",
+                "    public UserScript()",
+                "    {",
+                "        Tick += OnTick;",
+                "    }",
+                "",
+                "    private void OnTick(object sender, EventArgs e)",
+                "    {",
+                "        // Seu código aqui",
+                "    }",
+                "}"
+            });
+            CursorLine = 13;
+            CursorColumn = 8;
+            HasUnsavedChanges = false;
         }
 
-        public void HandleEditInput(System.Windows.Forms.Keys key)
+        public void MoveCursor(int deltaLine, int deltaColumn)
         {
-            switch (key)
-            {
-                case System.Windows.Forms.Keys.Up:
-                    CursorLine = Math.Max(0, CursorLine - 1);
-                    CursorColumn = Math.Min(CursorColumn, CodeLines[CursorLine].Length);
-                    break;
-                case System.Windows.Forms.Keys.Down:
-                    CursorLine = Math.Min(CodeLines.Count - 1, CursorLine + 1);
-                    CursorColumn = Math.Min(CursorColumn, CodeLines[CursorLine].Length);
-                    break;
-                case System.Windows.Forms.Keys.Left:
-                    CursorColumn = Math.Max(0, CursorColumn - 1);
-                    break;
-                case System.Windows.Forms.Keys.Right:
-                    CursorColumn = Math.Min(CodeLines[CursorLine].Length, CursorColumn + 1);
-                    break;
-                case System.Windows.Forms.Keys.Back:
-                    if (CursorColumn > 0)
-                    {
-                        CodeLines[CursorLine] = CodeLines[CursorLine].Remove(CursorColumn - 1, 1);
-                        CursorColumn--;
-                    }
-                    else if (CursorLine > 0)
-                    {
-                        CursorColumn = CodeLines[CursorLine - 1].Length;
-                        CodeLines[CursorLine - 1] += CodeLines[CursorLine];
-                        CodeLines.RemoveAt(CursorLine);
-                        CursorLine--;
-                    }
-                    break;
-                case System.Windows.Forms.Keys.Enter:
-                    var rest = CodeLines[CursorLine].Substring(CursorColumn);
-                    CodeLines[CursorLine] = CodeLines[CursorLine].Substring(0, CursorColumn);
-                    CodeLines.Insert(CursorLine + 1, rest);
-                    CursorLine++;
-                    CursorColumn = 0;
-                    break;
-            }
+            CursorLine = Math.Max(0, Math.Min(CodeLines.Count - 1, CursorLine + deltaLine));
+            CursorColumn = Math.Max(0, Math.Min(GetCurrentLine().Length, CursorColumn + deltaColumn));
+        }
+
+        public string GetCurrentLine()
+        {
+            return CursorLine < CodeLines.Count ? CodeLines[CursorLine] : "";
+        }
+
+        public void InsertText(string text)
+        {
+            var currentLine = GetCurrentLine();
+            var newLine = currentLine.Insert(CursorColumn, text);
+            CodeLines[CursorLine] = newLine;
+            CursorColumn += text.Length;
             HasUnsavedChanges = true;
         }
 
-        public void HandleOutputScroll(System.Windows.Forms.Keys key)
+        public void HandleBackspace()
         {
-            if (key == System.Windows.Forms.Keys.Up)
-                OutputScroll = Math.Max(0, OutputScroll - 1);
-            else if (key == System.Windows.Forms.Keys.Down)
-                OutputScroll = OutputScroll + 1;
+            if (CursorColumn > 0)
+            {
+                var currentLine = GetCurrentLine();
+                CodeLines[CursorLine] = currentLine.Remove(CursorColumn - 1, 1);
+                CursorColumn--;
+                HasUnsavedChanges = true;
+            }
+            else if (CursorLine > 0)
+            {
+                var currentLine = GetCurrentLine();
+                CursorColumn = CodeLines[CursorLine - 1].Length;
+                CodeLines[CursorLine - 1] += currentLine;
+                CodeLines.RemoveAt(CursorLine);
+                CursorLine--;
+                HasUnsavedChanges = true;
+            }
+        }
+
+        public void HandleDelete()
+        {
+            var currentLine = GetCurrentLine();
+            if (CursorColumn < currentLine.Length)
+            {
+                CodeLines[CursorLine] = currentLine.Remove(CursorColumn, 1);
+                HasUnsavedChanges = true;
+            }
+            else if (CursorLine < CodeLines.Count - 1)
+            {
+                CodeLines[CursorLine] += CodeLines[CursorLine + 1];
+                CodeLines.RemoveAt(CursorLine + 1);
+                HasUnsavedChanges = true;
+            }
+        }
+
+        public void HandleEnter()
+        {
+            var currentLine = GetCurrentLine();
+            var beforeCursor = currentLine.Substring(0, CursorColumn);
+            var afterCursor = currentLine.Substring(CursorColumn);
+
+            CodeLines[CursorLine] = beforeCursor;
+            CodeLines.Insert(CursorLine + 1, afterCursor);
+            CursorLine++;
+            CursorColumn = 0;
+            HasUnsavedChanges = true;
+        }
+
+        public string GetAllText()
+        {
+            return string.Join("\n", CodeLines);
         }
     }
 }
