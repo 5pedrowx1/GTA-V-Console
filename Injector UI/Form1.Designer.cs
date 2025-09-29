@@ -253,6 +253,7 @@
             btnSettings.Size = new Size(110, 40);
             btnSettings.TabIndex = 2;
             btnSettings.Text = "⚙ Config";
+            btnSettings.Click += BtnSettings_Click;
             // 
             // btnClearLog
             // 
@@ -273,6 +274,7 @@
             btnClearLog.Size = new Size(110, 40);
             btnClearLog.TabIndex = 1;
             btnClearLog.Text = "🗑 Limpar";
+            btnClearLog.Click += BtnClearLog_Click;
             // 
             // chkAutoInject
             // 

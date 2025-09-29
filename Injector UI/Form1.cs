@@ -1,31 +1,70 @@
 ﻿using System.Diagnostics;
 using System.Security.Principal;
 using System.Text;
+using Injector_UI.Injector_UI;
 
 namespace Injector_UI
 {
     public partial class Form1 : Form
     {
-        private readonly InjectorConfig config;
+        private AppConfig config;
         private CancellationTokenSource cancellationToken;
         private bool isRunning;
-        private readonly int retryCount = 0;
         private const int MAX_RETRIES = 3;
 
         public Form1()
         {
             InitializeComponent();
-            config = new InjectorConfig();
+            config = AppConfig.Load();
+            ApplyConfiguration();
+        }
+
+        private void ApplyConfiguration()
+        {
+            // Aplicar configurações da interface
+            this.Size = new Size(config.Interface.WindowWidth, config.Interface.WindowHeight);
+            this.TopMost = config.Interface.AlwaysOnTop;
+
+            // Aplicar estado do AutoInject
+            chkAutoInject.Checked = config.General.AutoInject;
+
+            // Atualizar versão
+            lblVersion.Text = "v2.0.0";
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (config.General.CloseToTray && e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                this.WindowState = FormWindowState.Minimized;
+                if (config.Interface.ShowTrayNotifications)
+                {
+                    AppendLog("[i] Aplicativo minimizado para a bandeja", Color.Cyan);
+                }
+                return;
+            }
+
             cancellationToken?.Cancel();
+            config.Save();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await StartAutoInjectionAsync();
+            if (config.General.StartMinimized)
+            {
+                this.WindowState = FormWindowState.Minimized;
+            }
+
+            if (config.General.AutoInject)
+            {
+                await StartAutoInjectionAsync();
+            }
+            else
+            {
+                AppendLog("[i] Auto-injeção desativada", Color.Yellow);
+                AppendLog("[i] Aguardando comando manual...", Color.Gray);
+            }
         }
 
         private async Task StartAutoInjectionAsync()
@@ -34,8 +73,14 @@ namespace Injector_UI
 
             isRunning = true;
             cancellationToken = new CancellationTokenSource();
-            AppendLog("[i] Aguardando GTA V iniciar...", Color.Cyan);
-            AppendLog("");
+
+            var profile = config.GetActiveProfile();
+            AppendLog($"[i] Perfil Ativo: {profile.Name}", Color.Cyan);
+            if (!string.IsNullOrEmpty(profile.Description))
+            {
+                AppendLog($"[i] {profile.Description}", Color.Gray);
+            }
+            AppendLog($"[i] Aguardando {config.General.ProcessName} iniciar...", Color.Cyan);
 
             try
             {
@@ -44,29 +89,32 @@ namespace Injector_UI
                 {
                     checkCount++;
 
-                    // Mostrar "animação" de espera
                     if (checkCount % 3 == 0)
                     {
-                        UpdateLastLine($"[i] Procurando GTA V... ({checkCount * 2}s)");
+                        UpdateLastLine($"[i] Procurando {config.General.ProcessName}... ({checkCount * (config.Injection.ProcessCheckInterval / 1000)}s)");
+                        UpdateStatusIndicator(checkCount % 100);
                     }
 
                     var processInfo = await FindProcessAsync();
 
                     if (processInfo != null)
                     {
+                        UpdateStatusIndicator(100);
                         AppendLog("");
-                        AppendLog($"[✓] GTA V detectado! PID: {processInfo.Process.Id}", Color.LimeGreen);
+                        AppendLog($"[✓] {config.General.ProcessName} detectado! PID: {processInfo.Process.Id}", Color.LimeGreen);
                         AppendLog($"[i] Caminho: {processInfo.Process.MainModule?.FileName}", Color.Gray);
                         AppendLog("");
 
-                        // Aguardar o jogo carregar completamente
-                        await WaitForGameToFullyLoad(processInfo);
+                        if (config.Injection.WaitForGameLoad)
+                        {
+                            await WaitForGameToFullyLoad(processInfo);
+                        }
 
                         await ExecuteInjectionAsync(processInfo);
                         break;
                     }
 
-                    await Task.Delay(2000, cancellationToken.Token);
+                    await Task.Delay(config.Injection.ProcessCheckInterval, cancellationToken.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -78,6 +126,10 @@ namespace Injector_UI
             {
                 AppendLog("");
                 AppendLog($"[✗] Erro crítico: {ex.Message}", Color.Red);
+                if (config.General.SaveLogs)
+                {
+                    SaveLogToFile(ex);
+                }
             }
             finally
             {
@@ -90,7 +142,7 @@ namespace Injector_UI
             AppendLog("[i] Aguardando o jogo carregar completamente...", Color.Cyan);
 
             int waitTime = 0;
-            const int maxWaitTime = 60; // 60 segundos
+            int maxWaitTime = config.Injection.GameLoadTimeout;
 
             while (waitTime < maxWaitTime)
             {
@@ -98,14 +150,12 @@ namespace Injector_UI
                 {
                     processInfo.Process.Refresh();
 
-                    // Verificar se a janela principal está ativa
                     if (processInfo.Process.MainWindowHandle != IntPtr.Zero)
                     {
-                        // Verificar se tem módulos carregados suficientes
                         if (processInfo.Process.Modules.Count > 50)
                         {
                             AppendLog("[✓] Jogo totalmente carregado!", Color.LimeGreen);
-                            await Task.Delay(3000); // Aguardar mais 3s para estabilizar
+                            await Task.Delay(3000);
                             return;
                         }
                     }
@@ -129,15 +179,22 @@ namespace Injector_UI
         {
             try
             {
+                var profile = config.GetActiveProfile();
+
                 // Verificar privilégios
-                if (!IsRunningAsAdmin())
+                if (config.Security.RequireAdminPrivileges && !IsRunningAsAdmin())
                 {
-                    AppendLog("[⚠] Executando sem privilégios de administrador", Color.Orange);
-                    AppendLog("[i] Algumas operações podem falhar", Color.Gray);
+                    AppendLog("[✗] Privilégios de administrador necessários!", Color.Red);
+                    AppendLog("[i] Execute o aplicativo como Administrador", Color.Yellow);
+                    return;
+                }
+                else if (IsRunningAsAdmin())
+                {
+                    AppendLog("[✓] Executando como Administrador", Color.LimeGreen);
                 }
                 else
                 {
-                    AppendLog("[✓] Executando como Administrador", Color.LimeGreen);
+                    AppendLog("[⚠] Executando sem privilégios de administrador", Color.Orange);
                 }
 
                 AppendLog("");
@@ -154,70 +211,36 @@ namespace Injector_UI
                     return;
                 }
 
-                // Verificar integridade do diretório
                 CheckGameDirectoryIntegrity(processInfo.Directory);
                 AppendLog("");
 
                 // ============ SCRIPTHOOKV ============
-                AppendLog("─── ScriptHookV ───", Color.Purple);
-
-                if (IsModuleLoaded(processInfo.Process, "ScriptHookV.dll"))
+                if (profile.InjectScriptHook)
                 {
-                    AppendLog("[✓] ScriptHookV já está carregado!", Color.LimeGreen);
+                    await InjectScriptHookVAsync(processInfo);
                 }
                 else
                 {
-                    var scriptHookPath = FindScriptHookDLL(processInfo.Directory);
-                    if (string.IsNullOrEmpty(scriptHookPath))
-                    {
-                        AppendLog("[✗] ScriptHookV.dll não encontrado!", Color.Red);
-                        AppendLog("[i] Baixe de: http://www.dev-c.com/gtav/scripthookv/", Color.Cyan);
-                        AppendLog("[i] Extraia para: " + processInfo.Directory, Color.Gray);
-                        return;
-                    }
-
-                    // Verificar DLL
-                    if (!VerifyDLL(scriptHookPath))
-                    {
-                        AppendLog("[✗] ScriptHookV.dll pode estar corrompido", Color.Red);
-                        return;
-                    }
-
-                    AppendLog($"[i] Encontrado: {Path.GetFileName(scriptHookPath)}", Color.White);
-                    AppendLog("[i] Injetando ScriptHookV...", Color.Cyan);
-
-                    var result = await InjectDLLWithRetry(processInfo.Process, scriptHookPath, "ScriptHookV");
-
-                    if (result != InjectionResult.Success)
-                    {
-                        AppendLog($"[✗] Falha na injeção: {result}", Color.Red);
-                        SuggestSolution(result);
-                        return;
-                    }
-
-                    AppendLog("[✓] ScriptHookV injetado com sucesso!", Color.LimeGreen);
+                    AppendLog("[i] ScriptHookV desativado no perfil", Color.Gray);
                 }
-
-                // Aguardar inicialização
-                AppendLog("");
-                AppendLog("[i] Aguardando inicialização do ScriptHookV...", Color.Cyan);
-                var initialized = await WaitForScriptHookInitializationAsync(processInfo);
-
-                if (!initialized)
-                {
-                    AppendLog("[⚠] ScriptHookV pode não ter inicializado completamente", Color.Orange);
-                    AppendLog("[i] Continuando mesmo assim...", Color.Gray);
-                }
-                else
-                {
-                    AppendLog("[✓] ScriptHookV inicializado com sucesso!", Color.LimeGreen);
-                }
-
-                await Task.Delay(2000);
 
                 // ============ SCRIPTHOOKDOTNET ============
-                AppendLog("");
-                await TryInjectDotNetAsync(processInfo);
+                if (profile.InjectDotNet)
+                {
+                    AppendLog("");
+                    await TryInjectDotNetAsync(processInfo);
+                }
+                else
+                {
+                    AppendLog("[i] ScriptHookDotNet desativado no perfil", Color.Gray);
+                }
+
+                // ============ DLLS CUSTOMIZADAS ============
+                if (profile.CustomDllsEnabled && config.CustomDlls.Count > 0)
+                {
+                    AppendLog("");
+                    await InjectCustomDllsAsync(processInfo, profile);
+                }
 
                 // ============ FINALIZAÇÃO ============
                 AppendLog("");
@@ -228,12 +251,124 @@ namespace Injector_UI
                 AppendLog("[✓] Todas as DLLs foram injetadas!", Color.LimeGreen);
                 AppendLog("[i] Pressione F4 no jogo para abrir o console", Color.Cyan);
                 AppendLog("[i] Você pode fechar esta janela agora", Color.Gray);
+
+                UpdateStatus("Injeção Concluída!", Color.LimeGreen);
             }
             catch (Exception ex)
             {
                 AppendLog("");
                 AppendLog($"[✗] Erro durante injeção: {ex.Message}", Color.Red);
-                AppendLog($"[i] Stack Trace: {ex.StackTrace}", Color.Gray);
+                if (config.Interface.ShowDetailedLogs)
+                {
+                    AppendLog($"[i] Stack Trace: {ex.StackTrace}", Color.Gray);
+                }
+                UpdateStatus("Erro na Injeção", Color.Red);
+            }
+        }
+
+        private async Task InjectScriptHookVAsync(ProcessInfo processInfo)
+        {
+            AppendLog("─── ScriptHookV ───", Color.Purple);
+
+            if (IsModuleLoaded(processInfo.Process, "ScriptHookV.dll"))
+            {
+                AppendLog("[✓] ScriptHookV já está carregado!", Color.LimeGreen);
+                return;
+            }
+
+            var scriptHookPath = FindScriptHookDLL(processInfo.Directory);
+            if (string.IsNullOrEmpty(scriptHookPath))
+            {
+                AppendLog("[✗] ScriptHookV.dll não encontrado!", Color.Red);
+                AppendLog("[i] Baixe de: http://www.dev-c.com/gtav/scripthookv/", Color.Cyan);
+                AppendLog("[i] Extraia para: " + processInfo.Directory, Color.Gray);
+                return;
+            }
+
+            if (config.Security.VerifyDllSignatures && !VerifyDLL(scriptHookPath))
+            {
+                AppendLog("[✗] Falha na verificação da DLL", Color.Red);
+                return;
+            }
+
+            AppendLog($"[i] Encontrado: {Path.GetFileName(scriptHookPath)}", Color.White);
+            AppendLog("[i] Injetando ScriptHookV...", Color.Cyan);
+
+            var result = await InjectDLLWithRetry(processInfo.Process, scriptHookPath, "ScriptHookV");
+
+            if (result != InjectionResult.Success)
+            {
+                AppendLog($"[✗] Falha na injeção: {result}", Color.Red);
+                SuggestSolution(result);
+                return;
+            }
+
+            AppendLog("[✓] ScriptHookV injetado com sucesso!", Color.LimeGreen);
+
+            AppendLog("");
+            AppendLog("[i] Aguardando inicialização do ScriptHookV...", Color.Cyan);
+            var initialized = await WaitForScriptHookInitializationAsync(processInfo);
+
+            if (initialized)
+            {
+                AppendLog("[✓] ScriptHookV inicializado com sucesso!", Color.LimeGreen);
+            }
+            else
+            {
+                AppendLog("[⚠] ScriptHookV pode não ter inicializado completamente", Color.Orange);
+            }
+
+            await Task.Delay(config.Injection.PostInjectionDelay);
+        }
+
+        private async Task InjectCustomDllsAsync(ProcessInfo processInfo, ProfileConfig profile)
+        {
+            AppendLog("─── DLLs Customizadas ───", Color.Purple);
+
+            var enabledDlls = config.CustomDlls
+                .Where(dll => dll.Enabled && profile.EnabledCustomDlls.Contains(dll.Name))
+                .OrderBy(dll => dll.Priority)
+                .ToList();
+
+            if (enabledDlls.Count == 0)
+            {
+                AppendLog("[i] Nenhuma DLL customizada habilitada", Color.Gray);
+                return;
+            }
+
+            foreach (var dllConfig in enabledDlls)
+            {
+                try
+                {
+                    if (!File.Exists(dllConfig.Path))
+                    {
+                        AppendLog($"[✗] {dllConfig.Name}: Arquivo não encontrado", Color.Red);
+                        continue;
+                    }
+
+                    AppendLog($"[i] Injetando: {dllConfig.Name}", Color.Cyan);
+                    if (!string.IsNullOrEmpty(dllConfig.Description))
+                    {
+                        AppendLog($"    {dllConfig.Description}", Color.Gray);
+                    }
+
+                    var result = await InjectDLLWithRetry(processInfo.Process, dllConfig.Path, dllConfig.Name);
+
+                    if (result == InjectionResult.Success)
+                    {
+                        AppendLog($"[✓] {dllConfig.Name} injetado!", Color.LimeGreen);
+                    }
+                    else
+                    {
+                        AppendLog($"[✗] {dllConfig.Name}: {result}", Color.Red);
+                    }
+
+                    await Task.Delay(config.Injection.PostInjectionDelay);
+                }
+                catch (Exception ex)
+                {
+                    AppendLog($"[✗] Erro ao injetar {dllConfig.Name}: {ex.Message}", Color.Red);
+                }
             }
         }
 
@@ -293,25 +428,26 @@ namespace Injector_UI
             catch (Exception ex)
             {
                 AppendLog($"[⚠] Erro ao verificar DLL: {ex.Message}", Color.Orange);
-                return true; // Continuar mesmo com erro na verificação
+                return !config.Security.SafeMode;
             }
         }
 
         private async Task<InjectionResult> InjectDLLWithRetry(Process targetProcess, string dllPath, string dllName)
         {
-            for (int attempt = 1; attempt <= MAX_RETRIES; attempt++)
+            var maxRetries = config.Injection.MaxRetries;
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
                 if (attempt > 1)
                 {
-                    AppendLog($"[i] Tentativa {attempt}/{MAX_RETRIES}...", Color.Cyan);
-                    await Task.Delay(2000);
+                    AppendLog($"[i] Tentativa {attempt}/{maxRetries}...", Color.Cyan);
+                    await Task.Delay(config.Injection.RetryDelay);
                 }
 
                 var result = await InjectDLLAsync(targetProcess, dllPath);
 
                 if (result == InjectionResult.Success)
                 {
-                    // Verificar se realmente carregou
                     await Task.Delay(1000);
                     if (IsModuleLoaded(targetProcess, Path.GetFileName(dllPath)))
                     {
@@ -361,7 +497,7 @@ namespace Injector_UI
         {
             return await Task.Run(() =>
             {
-                var processes = Process.GetProcessesByName(config.ProcessName);
+                var processes = Process.GetProcessesByName(config.General.ProcessName);
                 if (processes.Length == 0) return null;
 
                 var process = processes[0];
@@ -407,22 +543,12 @@ namespace Injector_UI
 
         private string? FindScriptHookDLL(string gameDirectory)
         {
-            var searchPaths = new[]
+            foreach (var variant in config.Injection.ScriptHookVariants)
             {
-                gameDirectory,
-                Path.Combine(gameDirectory, "bin"),
-                Path.Combine(gameDirectory, "plugins")
-            };
-
-            foreach (var basePath in searchPaths)
-            {
-                foreach (var variant in config.ScriptHookVariants)
+                var path = Path.Combine(gameDirectory, variant);
+                if (File.Exists(path))
                 {
-                    var fullPath = Path.Combine(basePath, variant);
-                    if (File.Exists(fullPath))
-                    {
-                        return fullPath;
-                    }
+                    return path;
                 }
             }
 
@@ -481,7 +607,7 @@ namespace Injector_UI
                         return InjectionResult.InjectionFailed;
                     }
 
-                    var waitResult = Win32Api.WaitForSingleObject(threadHandle, (uint)config.InjectionTimeout);
+                    var waitResult = Win32Api.WaitForSingleObject(threadHandle, (uint)config.Injection.InjectionTimeout);
 
                     if (waitResult == Win32Constants.WAIT_OBJECT_0)
                     {
@@ -508,7 +634,7 @@ namespace Injector_UI
         private async Task<bool> WaitForScriptHookInitializationAsync(ProcessInfo processInfo)
         {
             var logPath = Path.Combine(processInfo.Directory, "ScriptHookV.log");
-            var cancellation = new CancellationTokenSource(config.InitializationTimeout);
+            var cancellation = new CancellationTokenSource(config.Injection.InitializationTimeout);
 
             try
             {
@@ -608,10 +734,9 @@ namespace Injector_UI
                 return;
             }
 
-            // Verificar DLL
-            if (!VerifyDLL(dotNetPath))
+            if (config.Security.VerifyDllSignatures && !VerifyDLL(dotNetPath))
             {
-                AppendLog("[✗] ScriptHookDotNet.asi pode estar corrompido", Color.Red);
+                AppendLog("[✗] Falha na verificação da DLL", Color.Red);
                 return;
             }
 
@@ -642,25 +767,7 @@ namespace Injector_UI
 
         private string? FindDotNetDLL(string gameDirectory)
         {
-            // Priorizar ASI files
-            var asiVariants = new[]
-            {
-                "ScriptHookVDotNet3.asi",
-                "ScriptHookVDotNet.asi",
-                "ScriptHookVDotNet2.asi"
-            };
-
-            foreach (var variant in asiVariants)
-            {
-                var path = Path.Combine(gameDirectory, variant);
-                if (File.Exists(path))
-                {
-                    return path;
-                }
-            }
-
-            // Procurar DLLs
-            foreach (var variant in config.DotNetVariants)
+            foreach (var variant in config.Injection.DotNetVariants)
             {
                 var path = Path.Combine(gameDirectory, variant);
                 if (File.Exists(path))
@@ -673,6 +780,25 @@ namespace Injector_UI
                    SearchFileRecursive(gameDirectory, "ScriptHookVDotNet*.dll", 2);
         }
 
+        private void SaveLogToFile(Exception ex)
+        {
+            try
+            {
+                var logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config.General.LogDirectory);
+                Directory.CreateDirectory(logDir);
+
+                var logFile = Path.Combine(logDir, $"error_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+                var logContent = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]\n{ex.Message}\n{ex.StackTrace}\n\n{txtOut.Text}";
+
+                File.WriteAllText(logFile, logContent);
+                AppendLog($"[i] Log salvo em: {logFile}", Color.Gray);
+            }
+            catch
+            {
+                // Ignorar erros ao salvar log
+            }
+        }
+
         private void AppendLog(string message, Color? color = null)
         {
             if (txtOut.InvokeRequired)
@@ -681,7 +807,11 @@ namespace Injector_UI
                 return;
             }
 
-            txtOut.Text += message + Environment.NewLine;
+            var timestamp = config.Interface.ShowTimestamps
+                ? $"[{DateTime.Now:HH:mm:ss}] "
+                : "";
+
+            txtOut.Text += timestamp + message + Environment.NewLine;
             txtOut.SelectionStart = txtOut.Text.Length;
             txtOut.ScrollToCaret();
         }
@@ -697,20 +827,83 @@ namespace Injector_UI
             var lines = txtOut.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
             if (lines.Count > 0)
             {
-                lines[lines.Count - 2] = message; // -2 porque última linha é vazia
+                var timestamp = config.Interface.ShowTimestamps
+                    ? $"[{DateTime.Now:HH:mm:ss}] "
+                    : "";
+
+                lines[lines.Count - 2] = timestamp + message;
                 txtOut.Text = string.Join(Environment.NewLine, lines);
                 txtOut.SelectionStart = txtOut.Text.Length;
                 txtOut.ScrollToCaret();
             }
         }
 
+        private void UpdateStatus(string message, Color color)
+        {
+            if (lblStatus.InvokeRequired)
+            {
+                lblStatus.Invoke(new Action(() => UpdateStatus(message, color)));
+                return;
+            }
+
+            lblStatus.Text = message;
+            lblStatus.ForeColor = color;
+        }
+
+        private void UpdateStatusIndicator(int value)
+        {
+            if (indicatorStatus.InvokeRequired)
+            {
+                indicatorStatus.Invoke(new Action(() => UpdateStatusIndicator(value)));
+                return;
+            }
+
+            indicatorStatus.Value = Math.Min(value, 100);
+        }
+
         private void BtnClose_Click(object sender, EventArgs e)
         {
             cancellationToken?.Cancel();
+            config.Save();
             Application.Exit();
         }
 
-        // Helper Methods
+        private void BtnMinimize_Click(object sender, EventArgs e)
+        {
+            if (config.General.MinimizeToTray)
+            {
+                this.WindowState = FormWindowState.Minimized;
+                if (config.Interface.ShowTrayNotifications)
+                {
+                    AppendLog("[i] Minimizado para a bandeja do sistema", Color.Cyan);
+                }
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Minimized;
+            }
+        }
+
+        private void BtnClearLog_Click(object sender, EventArgs e)
+        {
+            txtOut.Clear();
+            AppendLog("[i] Log limpo", Color.Cyan);
+        }
+
+        private void BtnSettings_Click(object sender, EventArgs e)
+        {
+            AppendLog("[i] Configurações em desenvolvimento...", Color.Yellow);
+
+            var settingsForm = new SettingsForm(config);
+            if (settingsForm.ShowDialog() == DialogResult.OK)
+            {
+                config = settingsForm.UpdatedConfig;
+                config.Save();
+                ApplyConfiguration();
+                AppendLog("[✓] Configurações atualizadas!", Color.LimeGreen);
+            }
+        }
+
         private static bool IsRunningAsAdmin()
         {
             try
@@ -792,11 +985,6 @@ namespace Injector_UI
             }
 
             return null;
-        }
-
-        private void BtnMinimize_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
