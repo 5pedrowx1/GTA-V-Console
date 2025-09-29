@@ -9,12 +9,18 @@ namespace Injector_UI
         private readonly InjectorConfig config;
         private CancellationTokenSource cancellationToken;
         private bool isRunning;
+        private readonly int retryCount = 0;
+        private const int MAX_RETRIES = 3;
 
         public Form1()
         {
             InitializeComponent();
             config = new InjectorConfig();
-            this.Load += Form1_Load;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cancellationToken?.Cancel();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -28,19 +34,34 @@ namespace Injector_UI
 
             isRunning = true;
             cancellationToken = new CancellationTokenSource();
-
-            AppendLog("=== ScriptHookV Auto-Injector ===");
-            AppendLog("Aguardando GTA V...\n");
+            AppendLog("[i] Aguardando GTA V iniciar...", Color.Cyan);
+            AppendLog("");
 
             try
             {
+                int checkCount = 0;
                 while (!cancellationToken.Token.IsCancellationRequested)
                 {
+                    checkCount++;
+
+                    // Mostrar "animação" de espera
+                    if (checkCount % 3 == 0)
+                    {
+                        UpdateLastLine($"[i] Procurando GTA V... ({checkCount * 2}s)");
+                    }
+
                     var processInfo = await FindProcessAsync();
 
                     if (processInfo != null)
                     {
-                        AppendLog($"[✓] GTA V detectado! PID: {processInfo.Process.Id}");
+                        AppendLog("");
+                        AppendLog($"[✓] GTA V detectado! PID: {processInfo.Process.Id}", Color.LimeGreen);
+                        AppendLog($"[i] Caminho: {processInfo.Process.MainModule?.FileName}", Color.Gray);
+                        AppendLog("");
+
+                        // Aguardar o jogo carregar completamente
+                        await WaitForGameToFullyLoad(processInfo);
+
                         await ExecuteInjectionAsync(processInfo);
                         break;
                     }
@@ -50,7 +71,13 @@ namespace Injector_UI
             }
             catch (OperationCanceledException)
             {
-                AppendLog("\n[!] Operação cancelada");
+                AppendLog("");
+                AppendLog("[!] Operação cancelada pelo usuário", Color.Orange);
+            }
+            catch (Exception ex)
+            {
+                AppendLog("");
+                AppendLog($"[✗] Erro crítico: {ex.Message}", Color.Red);
             }
             finally
             {
@@ -58,77 +85,279 @@ namespace Injector_UI
             }
         }
 
+        private async Task WaitForGameToFullyLoad(ProcessInfo processInfo)
+        {
+            AppendLog("[i] Aguardando o jogo carregar completamente...", Color.Cyan);
+
+            int waitTime = 0;
+            const int maxWaitTime = 60; // 60 segundos
+
+            while (waitTime < maxWaitTime)
+            {
+                try
+                {
+                    processInfo.Process.Refresh();
+
+                    // Verificar se a janela principal está ativa
+                    if (processInfo.Process.MainWindowHandle != IntPtr.Zero)
+                    {
+                        // Verificar se tem módulos carregados suficientes
+                        if (processInfo.Process.Modules.Count > 50)
+                        {
+                            AppendLog("[✓] Jogo totalmente carregado!", Color.LimeGreen);
+                            await Task.Delay(3000); // Aguardar mais 3s para estabilizar
+                            return;
+                        }
+                    }
+                }
+                catch { }
+
+                await Task.Delay(1000);
+                waitTime++;
+
+                if (waitTime % 5 == 0)
+                {
+                    UpdateLastLine($"[i] Aguardando o jogo carregar... ({waitTime}s/{maxWaitTime}s)");
+                }
+            }
+
+            AppendLog("[⚠] Timeout ao aguardar carregamento completo", Color.Orange);
+            AppendLog("[i] Tentando injetar mesmo assim...", Color.Cyan);
+        }
+
         private async Task ExecuteInjectionAsync(ProcessInfo processInfo)
         {
             try
             {
+                // Verificar privilégios
                 if (!IsRunningAsAdmin())
                 {
-                    AppendLog("[⚠] Executando sem privilégios de administrador");
+                    AppendLog("[⚠] Executando sem privilégios de administrador", Color.Orange);
+                    AppendLog("[i] Algumas operações podem falhar", Color.Gray);
+                }
+                else
+                {
+                    AppendLog("[✓] Executando como Administrador", Color.LimeGreen);
                 }
 
-                AppendLog($"[i] Arquitetura: {(processInfo.Is64Bit ? "64-bit" : "32-bit")}");
-                AppendLog($"[i] Diretório: {processInfo.Directory}\n");
+                AppendLog("");
+                AppendLog("─── Informações do Sistema ───", Color.Cyan);
+                AppendLog($"[i] Arquitetura do Jogo: {(processInfo.Is64Bit ? "64-bit" : "32-bit")}", Color.White);
+                AppendLog($"[i] Arquitetura do Injetor: {(Environment.Is64BitProcess ? "64-bit" : "32-bit")}", Color.White);
+                AppendLog($"[i] Diretório: {processInfo.Directory}", Color.Gray);
+                AppendLog($"[i] Threads: {processInfo.Process.Threads.Count}", Color.Gray);
+                AppendLog($"[i] Módulos Carregados: {processInfo.Process.Modules.Count}", Color.Gray);
+                AppendLog("");
 
                 if (!CheckArchitectureCompatibility(processInfo))
                 {
                     return;
                 }
 
-                // Verificar ScriptHookV
+                // Verificar integridade do diretório
+                CheckGameDirectoryIntegrity(processInfo.Directory);
+                AppendLog("");
+
+                // ============ SCRIPTHOOKV ============
+                AppendLog("─── ScriptHookV ───", Color.Purple);
+
                 if (IsModuleLoaded(processInfo.Process, "ScriptHookV.dll"))
                 {
-                    AppendLog("[✓] ScriptHookV já está carregado!");
+                    AppendLog("[✓] ScriptHookV já está carregado!", Color.LimeGreen);
                 }
                 else
                 {
                     var scriptHookPath = FindScriptHookDLL(processInfo.Directory);
                     if (string.IsNullOrEmpty(scriptHookPath))
                     {
-                        AppendLog("[✗] ScriptHookV.dll não encontrado!");
-                        AppendLog("[i] Baixe de: http://www.dev-c.com/gtav/scripthookv/");
+                        AppendLog("[✗] ScriptHookV.dll não encontrado!", Color.Red);
+                        AppendLog("[i] Baixe de: http://www.dev-c.com/gtav/scripthookv/", Color.Cyan);
+                        AppendLog("[i] Extraia para: " + processInfo.Directory, Color.Gray);
                         return;
                     }
 
-                    AppendLog($"[i] Injetando ScriptHookV...");
-                    var result = await InjectDLLAsync(processInfo.Process, scriptHookPath);
+                    // Verificar DLL
+                    if (!VerifyDLL(scriptHookPath))
+                    {
+                        AppendLog("[✗] ScriptHookV.dll pode estar corrompido", Color.Red);
+                        return;
+                    }
+
+                    AppendLog($"[i] Encontrado: {Path.GetFileName(scriptHookPath)}", Color.White);
+                    AppendLog("[i] Injetando ScriptHookV...", Color.Cyan);
+
+                    var result = await InjectDLLWithRetry(processInfo.Process, scriptHookPath, "ScriptHookV");
 
                     if (result != InjectionResult.Success)
                     {
-                        AppendLog($"[✗] Falha: {result}");
+                        AppendLog($"[✗] Falha na injeção: {result}", Color.Red);
+                        SuggestSolution(result);
                         return;
                     }
 
-                    AppendLog("[✓] ScriptHookV injetado!");
+                    AppendLog("[✓] ScriptHookV injetado com sucesso!", Color.LimeGreen);
                 }
 
                 // Aguardar inicialização
-                AppendLog("[i] Aguardando inicialização...");
+                AppendLog("");
+                AppendLog("[i] Aguardando inicialização do ScriptHookV...", Color.Cyan);
                 var initialized = await WaitForScriptHookInitializationAsync(processInfo);
 
                 if (!initialized)
                 {
-                    AppendLog("[⚠] ScriptHookV pode não ter inicializado completamente");
+                    AppendLog("[⚠] ScriptHookV pode não ter inicializado completamente", Color.Orange);
+                    AppendLog("[i] Continuando mesmo assim...", Color.Gray);
                 }
                 else
                 {
-                    AppendLog("[✓] ScriptHookV inicializado!");
+                    AppendLog("[✓] ScriptHookV inicializado com sucesso!", Color.LimeGreen);
                 }
 
                 await Task.Delay(2000);
 
-                // Injetar ScriptHookDotNet
+                // ============ SCRIPTHOOKDOTNET ============
+                AppendLog("");
                 await TryInjectDotNetAsync(processInfo);
 
-                AppendLog("\n[✓] Processo concluído com sucesso!");
+                // ============ FINALIZAÇÃO ============
+                AppendLog("");
+                AppendLog("╔════════════════════════════════════════╗", Color.LimeGreen);
+                AppendLog("║  PROCESSO CONCLUÍDO COM SUCESSO!      ║", Color.LimeGreen);
+                AppendLog("╚════════════════════════════════════════╝", Color.LimeGreen);
+                AppendLog("");
+                AppendLog("[✓] Todas as DLLs foram injetadas!", Color.LimeGreen);
+                AppendLog("[i] Pressione F4 no jogo para abrir o console", Color.Cyan);
+                AppendLog("[i] Você pode fechar esta janela agora", Color.Gray);
             }
             catch (Exception ex)
             {
-                AppendLog($"\n[✗] Erro: {ex.Message}");
+                AppendLog("");
+                AppendLog($"[✗] Erro durante injeção: {ex.Message}", Color.Red);
+                AppendLog($"[i] Stack Trace: {ex.StackTrace}", Color.Gray);
             }
         }
 
-        private async Task<ProcessInfo> FindProcessAsync()
+        private void CheckGameDirectoryIntegrity(string gameDir)
+        {
+            AppendLog("─── Verificação do Diretório ───", Color.Cyan);
+
+            var requiredFiles = new[] { "GTA5.exe", "bink2w64.dll" };
+
+            foreach (var file in requiredFiles)
+            {
+                var filePath = Path.Combine(gameDir, file);
+                if (File.Exists(filePath))
+                {
+                    AppendLog($"[✓] {file} encontrado", Color.LimeGreen);
+                }
+                else
+                {
+                    AppendLog($"[⚠] {file} não encontrado", Color.Orange);
+                }
+            }
+
+            var scriptsDir = Path.Combine(gameDir, "scripts");
+            if (Directory.Exists(scriptsDir))
+            {
+                var scriptCount = Directory.GetFiles(scriptsDir, "*.dll").Length +
+                                Directory.GetFiles(scriptsDir, "*.asi").Length;
+                AppendLog($"[✓] Pasta 'scripts' encontrada ({scriptCount} arquivos)", Color.LimeGreen);
+            }
+            else
+            {
+                AppendLog("[⚠] Pasta 'scripts' não encontrada", Color.Orange);
+                AppendLog("[i] Crie uma pasta 'scripts' para seus mods", Color.Gray);
+            }
+        }
+
+        private bool VerifyDLL(string dllPath)
+        {
+            try
+            {
+                var fileInfo = new FileInfo(dllPath);
+
+                if (fileInfo.Length < 50000)
+                {
+                    AppendLog($"[⚠] Arquivo suspeitosamente pequeno: {fileInfo.Length:N0} bytes", Color.Orange);
+                    return false;
+                }
+
+                var versionInfo = FileVersionInfo.GetVersionInfo(dllPath);
+                if (!string.IsNullOrEmpty(versionInfo.FileVersion))
+                {
+                    AppendLog($"[i] Versão da DLL: {versionInfo.FileVersion}", Color.Gray);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[⚠] Erro ao verificar DLL: {ex.Message}", Color.Orange);
+                return true; // Continuar mesmo com erro na verificação
+            }
+        }
+
+        private async Task<InjectionResult> InjectDLLWithRetry(Process targetProcess, string dllPath, string dllName)
+        {
+            for (int attempt = 1; attempt <= MAX_RETRIES; attempt++)
+            {
+                if (attempt > 1)
+                {
+                    AppendLog($"[i] Tentativa {attempt}/{MAX_RETRIES}...", Color.Cyan);
+                    await Task.Delay(2000);
+                }
+
+                var result = await InjectDLLAsync(targetProcess, dllPath);
+
+                if (result == InjectionResult.Success)
+                {
+                    // Verificar se realmente carregou
+                    await Task.Delay(1000);
+                    if (IsModuleLoaded(targetProcess, Path.GetFileName(dllPath)))
+                    {
+                        return InjectionResult.Success;
+                    }
+                    else
+                    {
+                        AppendLog($"[⚠] DLL não foi carregada após injeção", Color.Orange);
+                    }
+                }
+                else if (result == InjectionResult.AccessDenied)
+                {
+                    AppendLog("[✗] Acesso negado! Execute como Administrador", Color.Red);
+                    return result;
+                }
+            }
+
+            return InjectionResult.InjectionFailed;
+        }
+
+        private void SuggestSolution(InjectionResult result)
+        {
+            AppendLog("");
+            AppendLog("─── Possíveis Soluções ───", Color.Cyan);
+
+            switch (result)
+            {
+                case InjectionResult.AccessDenied:
+                    AppendLog("[i] 1. Execute o injetor como Administrador", Color.Yellow);
+                    AppendLog("[i] 2. Desative temporariamente o antivírus", Color.Yellow);
+                    AppendLog("[i] 3. Adicione exceção no Windows Defender", Color.Yellow);
+                    break;
+
+                case InjectionResult.ArchitectureMismatch:
+                    AppendLog("[i] Use a versão correta do injetor (32 ou 64 bits)", Color.Yellow);
+                    break;
+
+                case InjectionResult.InjectionFailed:
+                    AppendLog("[i] 1. Reinicie o GTA V", Color.Yellow);
+                    AppendLog("[i] 2. Verifique se o ScriptHookV é compatível", Color.Yellow);
+                    AppendLog("[i] 3. Execute como Administrador", Color.Yellow);
+                    break;
+            }
+        }
+
+        private async Task<ProcessInfo?> FindProcessAsync()
         {
             return await Task.Run(() =>
             {
@@ -136,15 +365,26 @@ namespace Injector_UI
                 if (processes.Length == 0) return null;
 
                 var process = processes[0];
-                var directory = GetProcessDirectory(process);
-                var is64Bit = CheckIfProcess64Bit(process);
 
-                return new ProcessInfo
+                try
                 {
-                    Process = process,
-                    Directory = directory,
-                    Is64Bit = is64Bit
-                };
+                    var directory = GetProcessDirectory(process);
+                    if (string.IsNullOrEmpty(directory))
+                        return null;
+
+                    var is64Bit = CheckIfProcess64Bit(process);
+
+                    return new ProcessInfo
+                    {
+                        Process = process,
+                        Directory = directory,
+                        Is64Bit = is64Bit
+                    };
+                }
+                catch
+                {
+                    return null;
+                }
             });
         }
 
@@ -154,15 +394,18 @@ namespace Injector_UI
 
             if (processInfo.Is64Bit != currentProcess64Bit)
             {
-                AppendLog($"[✗] ERRO: Incompatibilidade de arquitetura!");
-                AppendLog($"[i] Use a versão {(processInfo.Is64Bit ? "64-bit" : "32-bit")} do injetor");
+                AppendLog($"[✗] ERRO: Incompatibilidade de arquitetura!", Color.Red);
+                AppendLog($"[i] O jogo é {(processInfo.Is64Bit ? "64-bit" : "32-bit")}", Color.Yellow);
+                AppendLog($"[i] O injetor é {(currentProcess64Bit ? "64-bit" : "32-bit")}", Color.Yellow);
+                AppendLog($"[i] Use a versão {(processInfo.Is64Bit ? "64-bit" : "32-bit")} do injetor", Color.Cyan);
                 return false;
             }
 
+            AppendLog("[✓] Arquiteturas compatíveis", Color.LimeGreen);
             return true;
         }
 
-        private string FindScriptHookDLL(string gameDirectory)
+        private string? FindScriptHookDLL(string gameDirectory)
         {
             var searchPaths = new[]
             {
@@ -271,6 +514,7 @@ namespace Injector_UI
             {
                 var lastLogSize = 0L;
                 var stableCount = 0;
+                int waitSeconds = 0;
 
                 while (!cancellation.Token.IsCancellationRequested)
                 {
@@ -299,6 +543,12 @@ namespace Injector_UI
                     }
 
                     await Task.Delay(1000, cancellation.Token);
+                    waitSeconds++;
+
+                    if (waitSeconds % 5 == 0)
+                    {
+                        UpdateLastLine($"[i] Aguardando inicialização... ({waitSeconds}s)");
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -337,53 +587,62 @@ namespace Injector_UI
 
         private async Task TryInjectDotNetAsync(ProcessInfo processInfo)
         {
-            AppendLog("\n[i] Procurando ScriptHookDotNet...");
+            AppendLog("─── ScriptHookDotNet ───", Color.Purple);
 
             var dotNetPath = FindDotNetDLL(processInfo.Directory);
 
             if (string.IsNullOrEmpty(dotNetPath))
             {
-                AppendLog("[⚠] ScriptHookDotNet não encontrado");
-                AppendLog("[i] Baixe de: https://github.com/crosire/scripthookvdotnet/releases");
+                AppendLog("[⚠] ScriptHookDotNet não encontrado", Color.Orange);
+                AppendLog("[i] Baixe de: https://github.com/crosire/scripthookvdotnet/releases", Color.Cyan);
+                AppendLog("[i] O ScriptHookV está funcionando sem ele", Color.Gray);
                 return;
             }
 
-            AppendLog($"[✓] Encontrado: {Path.GetFileName(dotNetPath)}");
+            AppendLog($"[✓] Encontrado: {Path.GetFileName(dotNetPath)}", Color.White);
 
             var moduleName = Path.GetFileName(dotNetPath);
             if (IsModuleLoaded(processInfo.Process, moduleName))
             {
-                AppendLog("[✓] ScriptHookDotNet já está carregado!");
+                AppendLog("[✓] ScriptHookDotNet já está carregado!", Color.LimeGreen);
                 return;
             }
 
-            AppendLog("[i] Injetando ScriptHookDotNet...");
-            var result = await InjectDLLAsync(processInfo.Process, dotNetPath);
+            // Verificar DLL
+            if (!VerifyDLL(dotNetPath))
+            {
+                AppendLog("[✗] ScriptHookDotNet.asi pode estar corrompido", Color.Red);
+                return;
+            }
+
+            AppendLog("[i] Injetando ScriptHookDotNet...", Color.Cyan);
+            var result = await InjectDLLWithRetry(processInfo.Process, dotNetPath, "ScriptHookDotNet");
 
             if (result == InjectionResult.Success)
             {
-                AppendLog("[✓] ScriptHookDotNet injetado!");
+                AppendLog("[✓] ScriptHookDotNet injetado!", Color.LimeGreen);
 
                 await Task.Delay(3000);
 
                 if (IsModuleLoaded(processInfo.Process, moduleName))
                 {
-                    AppendLog("[✓] ScriptHookDotNet confirmado!");
-                    AppendLog("[i] Pressione F4 no jogo para abrir o console");
+                    AppendLog("[✓] ScriptHookDotNet confirmado e funcionando!", Color.LimeGreen);
                 }
                 else
                 {
-                    AppendLog("[⚠] ScriptHookDotNet pode não ter carregado");
+                    AppendLog("[⚠] ScriptHookDotNet pode não ter carregado corretamente", Color.Orange);
                 }
             }
             else
             {
-                AppendLog($"[✗] Falha ao injetar DotNet: {result}");
+                AppendLog($"[✗] Falha ao injetar DotNet: {result}", Color.Red);
+                SuggestSolution(result);
             }
         }
 
-        private string FindDotNetDLL(string gameDirectory)
+        private string? FindDotNetDLL(string gameDirectory)
         {
+            // Priorizar ASI files
             var asiVariants = new[]
             {
                 "ScriptHookVDotNet3.asi",
@@ -400,6 +659,7 @@ namespace Injector_UI
                 }
             }
 
+            // Procurar DLLs
             foreach (var variant in config.DotNetVariants)
             {
                 var path = Path.Combine(gameDirectory, variant);
@@ -413,17 +673,35 @@ namespace Injector_UI
                    SearchFileRecursive(gameDirectory, "ScriptHookVDotNet*.dll", 2);
         }
 
-        private void AppendLog(string message)
+        private void AppendLog(string message, Color? color = null)
         {
             if (txtOut.InvokeRequired)
             {
-                txtOut.Invoke(new Action(() => AppendLog(message)));
+                txtOut.Invoke(new Action(() => AppendLog(message, color)));
                 return;
             }
 
             txtOut.Text += message + Environment.NewLine;
             txtOut.SelectionStart = txtOut.Text.Length;
             txtOut.ScrollToCaret();
+        }
+
+        private void UpdateLastLine(string message)
+        {
+            if (txtOut.InvokeRequired)
+            {
+                txtOut.Invoke(new Action(() => UpdateLastLine(message)));
+                return;
+            }
+
+            var lines = txtOut.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+            if (lines.Count > 0)
+            {
+                lines[lines.Count - 2] = message; // -2 porque última linha é vazia
+                txtOut.Text = string.Join(Environment.NewLine, lines);
+                txtOut.SelectionStart = txtOut.Text.Length;
+                txtOut.ScrollToCaret();
+            }
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -447,11 +725,11 @@ namespace Injector_UI
             }
         }
 
-        private static string GetProcessDirectory(Process process)
+        private static string? GetProcessDirectory(Process process)
         {
             try
             {
-                return Path.GetDirectoryName(process.MainModule.FileName);
+                return Path.GetDirectoryName(process.MainModule?.FileName);
             }
             catch
             {
@@ -494,7 +772,7 @@ namespace Injector_UI
             }
         }
 
-        private static string SearchFileRecursive(string directory, string fileName, int maxDepth, int currentDepth = 0)
+        private static string? SearchFileRecursive(string directory, string fileName, int maxDepth, int currentDepth = 0)
         {
             if (currentDepth > maxDepth) return null;
 
@@ -513,7 +791,7 @@ namespace Injector_UI
             {
             }
 
-            return null!;
+            return null;
         }
     }
 }

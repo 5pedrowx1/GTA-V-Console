@@ -58,6 +58,7 @@
             txtOut.Name = "txtOut";
             txtOut.PlaceholderText = "";
             txtOut.ReadOnly = true;
+            txtOut.ScrollBars = ScrollBars.Vertical;
             txtOut.SelectedText = "";
             txtOut.ShadowDecoration.CustomizableEdges = customizableEdges2;
             txtOut.Size = new Size(495, 260);
@@ -112,6 +113,8 @@
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
+            FormClosing += Form1_FormClosing;
+            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
