@@ -1,14 +1,11 @@
 ﻿using GTA;
 using GTA.Native;
-using GTA.UI;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Security.Policy;
 using System.Windows.Forms;
 using Hash = GTA.Native.Hash;
 using Screen = GTA.UI.Screen;
+using GTA.UI;
 
 namespace GTA_V_Console
 {
@@ -44,7 +41,7 @@ namespace GTA_V_Console
             Tick += OnTick;
             KeyDown += OnKeyDown;
 
-            Screen.ShowSubtitle("GTA V Console carregado! Pressione F11 para abrir.");
+            Notification.Show("GTA V Console carregado! Pressione ~b~F11~w~ para abrir.");
         }
 
         private void OnTick(object sender, EventArgs e)
