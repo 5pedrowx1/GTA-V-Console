@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHook_GTA5_Injector", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console With Windows Forms", "Console With Windows Forms\Console With Windows Forms.csproj", "{C9081C56-17AA-4C02-A4C0-8F13F5EF09D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Injector UI", "Injector UI\Injector UI.csproj", "{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C9081C56-17AA-4C02-A4C0-8F13F5EF09D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9081C56-17AA-4C02-A4C0-8F13F5EF09D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9081C56-17AA-4C02-A4C0-8F13F5EF09D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
