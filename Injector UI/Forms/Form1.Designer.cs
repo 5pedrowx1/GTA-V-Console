@@ -37,6 +37,7 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             txtOut = new Guna.UI2.WinForms.Guna2TextBox();
             lblName = new Guna.UI2.WinForms.Guna2HtmlLabel();
             guna2DragControl1 = new Guna.UI2.WinForms.Guna2DragControl(components);
@@ -89,7 +90,7 @@
             // 
             lblName.BackColor = Color.Transparent;
             lblName.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            lblName.ForeColor = Color.FromArgb(160, 113, 255);
+            lblName.ForeColor = Color.Purple;
             lblName.Location = new Point(15, 12);
             lblName.Name = "lblName";
             lblName.Size = new Size(306, 27);
@@ -195,7 +196,7 @@
             // 
             lblStatus.BackColor = Color.Transparent;
             lblStatus.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lblStatus.ForeColor = Color.FromArgb(160, 113, 255);
+            lblStatus.ForeColor = Color.Purple;
             lblStatus.Location = new Point(65, 23);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(151, 22);
@@ -266,7 +267,7 @@
             btnSettings.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             btnSettings.DisabledState.FillColor2 = Color.FromArgb(169, 169, 169);
             btnSettings.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnSettings.FillColor = Color.FromArgb(160, 113, 255);
+            btnSettings.FillColor = Color.Purple;
             btnSettings.FillColor2 = Color.DarkMagenta;
             btnSettings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnSettings.ForeColor = Color.White;
@@ -321,6 +322,7 @@
             Controls.Add(panelTop);
             Controls.Add(txtOut);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(800, 555);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;

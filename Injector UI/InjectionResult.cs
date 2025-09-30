@@ -6,9 +6,9 @@
         ProcessNotFound,
         AccessDenied,
         ArchitectureMismatch,
-        DllNotFound,
-        DllCorrupted,
         InjectionFailed,
-        InitializationTimeout
+        ModuleNotFound,
+        InitializationFailed,
+        Timeout
     }
 }

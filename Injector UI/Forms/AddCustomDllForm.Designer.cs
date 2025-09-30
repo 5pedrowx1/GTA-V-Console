@@ -30,6 +30,7 @@ namespace Injector_UI
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -44,7 +45,7 @@ namespace Injector_UI
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddCustomDllForm));
             panelTop = new Guna2Panel();
             lblTitle = new Guna2HtmlLabel();
             lblName = new Label();
@@ -58,15 +59,16 @@ namespace Injector_UI
             separator = new Guna2Separator();
             btnCancel = new Guna2GradientButton();
             btnSave = new Guna2GradientButton();
+            guna2DragControl1 = new Guna2DragControl(components);
             panelTop.SuspendLayout();
             SuspendLayout();
             // 
             // panelTop
             // 
+            panelTop.BackColor = Color.FromArgb(20, 20, 20);
             panelTop.Controls.Add(lblTitle);
             panelTop.CustomizableEdges = customizableEdges1;
             panelTop.Dock = DockStyle.Top;
-            panelTop.BackColor = Color.FromArgb(20, 20, 20);
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
             panelTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
@@ -80,7 +82,7 @@ namespace Injector_UI
             lblTitle.ForeColor = Color.Purple;
             lblTitle.Location = new Point(20, 18);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(170, 27);
+            lblTitle.Size = new Size(155, 27);
             lblTitle.TabIndex = 0;
             lblTitle.Text = "➕ Adicionar DLL";
             // 
@@ -91,7 +93,7 @@ namespace Injector_UI
             lblName.ForeColor = Color.White;
             lblName.Location = new Point(30, 80);
             lblName.Name = "lblName";
-            lblName.Size = new Size(50, 19);
+            lblName.Size = new Size(49, 19);
             lblName.TabIndex = 1;
             lblName.Text = "Nome:";
             // 
@@ -118,7 +120,7 @@ namespace Injector_UI
             lblPath.ForeColor = Color.White;
             lblPath.Location = new Point(30, 135);
             lblPath.Name = "lblPath";
-            lblPath.Size = new Size(71, 19);
+            lblPath.Size = new Size(67, 19);
             lblPath.TabIndex = 3;
             lblPath.Text = "Caminho:";
             // 
@@ -161,7 +163,7 @@ namespace Injector_UI
             lblDescription.ForeColor = Color.White;
             lblDescription.Location = new Point(30, 190);
             lblDescription.Name = "lblDescription";
-            lblDescription.Size = new Size(74, 19);
+            lblDescription.Size = new Size(70, 19);
             lblDescription.TabIndex = 6;
             lblDescription.Text = "Descrição:";
             // 
@@ -184,10 +186,11 @@ namespace Injector_UI
             // 
             // chkEnabled
             // 
+            chkEnabled.Checked = true;
             chkEnabled.CheckedState.BorderRadius = 0;
             chkEnabled.CheckedState.BorderThickness = 0;
             chkEnabled.CheckedState.FillColor = Color.Purple;
-            chkEnabled.Checked = true;
+            chkEnabled.CheckState = CheckState.Checked;
             chkEnabled.Font = new Font("Segoe UI", 10F);
             chkEnabled.ForeColor = Color.White;
             chkEnabled.Location = new Point(180, 295);
@@ -238,6 +241,11 @@ namespace Injector_UI
             btnSave.Text = "💾 Salvar";
             btnSave.Click += BtnSave_Click;
             // 
+            // guna2DragControl1
+            // 
+            guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
+            guna2DragControl1.UseTransparentDrag = true;
+            // 
             // AddCustomDllForm
             // 
             BackColor = Color.FromArgb(18, 18, 18);
@@ -255,6 +263,7 @@ namespace Injector_UI
             Controls.Add(lblName);
             Controls.Add(panelTop);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AddCustomDllForm";
             StartPosition = FormStartPosition.CenterParent;
             panelTop.ResumeLayout(false);
@@ -278,5 +287,7 @@ namespace Injector_UI
         private Guna2GradientButton btnSave;
 
         #endregion
+
+        private Guna2DragControl guna2DragControl1;
     }
 }

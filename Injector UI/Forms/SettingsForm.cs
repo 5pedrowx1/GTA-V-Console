@@ -1,6 +1,5 @@
-﻿using Guna.UI2.WinForms;
+﻿
 using Injector_UI.Injector_UI;
-using System.Security.AccessControl;
 
 namespace Injector_UI
 {

@@ -30,6 +30,7 @@ namespace Injector_UI
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -38,6 +39,7 @@ namespace Injector_UI
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InputForm));
             panelTop = new Guna2Panel();
             lblTitle = new Guna2HtmlLabel();
             lblPrompt = new Label();
@@ -45,6 +47,7 @@ namespace Injector_UI
             separator = new Guna2Separator();
             btnCancel = new Guna2GradientButton();
             btnOk = new Guna2GradientButton();
+            guna2DragControl1 = new Guna2DragControl(components);
             panelTop.SuspendLayout();
             SuspendLayout();
             // 
@@ -140,6 +143,11 @@ namespace Injector_UI
             btnOk.Text = "✓ OK";
             btnOk.Click += BtnOk_Click;
             // 
+            // guna2DragControl1
+            // 
+            guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
+            guna2DragControl1.UseTransparentDrag = true;
+            // 
             // InputForm
             // 
             BackColor = Color.FromArgb(18, 18, 18);
@@ -151,6 +159,7 @@ namespace Injector_UI
             Controls.Add(btnCancel);
             Controls.Add(btnOk);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "InputForm";
             StartPosition = FormStartPosition.CenterParent;
             Shown += InputForm_Shown;
@@ -169,5 +178,6 @@ namespace Injector_UI
         private Guna2HtmlLabel lblTitle;
         private Label lblPrompt;
         private Guna2Separator separator;
+        private Guna2DragControl guna2DragControl1;
     }
 }

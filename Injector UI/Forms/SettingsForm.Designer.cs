@@ -18,6 +18,7 @@ namespace Injector_UI
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -187,7 +188,7 @@ namespace Injector_UI
             // 
             lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            lblTitle.ForeColor = Color.FromArgb(160, 113, 255);
+            lblTitle.ForeColor = Color.Purple;
             lblTitle.Location = new Point(20, 18);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(132, 27);
@@ -283,10 +284,10 @@ namespace Injector_UI
             // 
             // chkAutoInject
             // 
-            chkAutoInject.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkAutoInject.CheckedState.BorderColor = Color.Purple;
             chkAutoInject.CheckedState.BorderRadius = 0;
             chkAutoInject.CheckedState.BorderThickness = 0;
-            chkAutoInject.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkAutoInject.CheckedState.FillColor = Color.Purple;
             chkAutoInject.Font = new Font("Segoe UI", 10F);
             chkAutoInject.ForeColor = Color.White;
             chkAutoInject.Location = new Point(20, 100);
@@ -300,10 +301,10 @@ namespace Injector_UI
             // 
             // chkStartMinimized
             // 
-            chkStartMinimized.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkStartMinimized.CheckedState.BorderColor = Color.Purple;
             chkStartMinimized.CheckedState.BorderRadius = 0;
             chkStartMinimized.CheckedState.BorderThickness = 0;
-            chkStartMinimized.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkStartMinimized.CheckedState.FillColor = Color.Purple;
             chkStartMinimized.Font = new Font("Segoe UI", 10F);
             chkStartMinimized.ForeColor = Color.White;
             chkStartMinimized.Location = new Point(20, 130);
@@ -317,10 +318,10 @@ namespace Injector_UI
             // 
             // chkMinimizeToTray
             // 
-            chkMinimizeToTray.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkMinimizeToTray.CheckedState.BorderColor = Color.Purple;
             chkMinimizeToTray.CheckedState.BorderRadius = 0;
             chkMinimizeToTray.CheckedState.BorderThickness = 0;
-            chkMinimizeToTray.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkMinimizeToTray.CheckedState.FillColor = Color.Purple;
             chkMinimizeToTray.Font = new Font("Segoe UI", 10F);
             chkMinimizeToTray.ForeColor = Color.White;
             chkMinimizeToTray.Location = new Point(20, 160);
@@ -334,10 +335,10 @@ namespace Injector_UI
             // 
             // chkCloseToTray
             // 
-            chkCloseToTray.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkCloseToTray.CheckedState.BorderColor = Color.Purple;
             chkCloseToTray.CheckedState.BorderRadius = 0;
             chkCloseToTray.CheckedState.BorderThickness = 0;
-            chkCloseToTray.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkCloseToTray.CheckedState.FillColor = Color.Purple;
             chkCloseToTray.Font = new Font("Segoe UI", 10F);
             chkCloseToTray.ForeColor = Color.White;
             chkCloseToTray.Location = new Point(20, 190);
@@ -351,10 +352,10 @@ namespace Injector_UI
             // 
             // chkRunOnStartup
             // 
-            chkRunOnStartup.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkRunOnStartup.CheckedState.BorderColor = Color.Purple;
             chkRunOnStartup.CheckedState.BorderRadius = 0;
             chkRunOnStartup.CheckedState.BorderThickness = 0;
-            chkRunOnStartup.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkRunOnStartup.CheckedState.FillColor = Color.Purple;
             chkRunOnStartup.Font = new Font("Segoe UI", 10F);
             chkRunOnStartup.ForeColor = Color.White;
             chkRunOnStartup.Location = new Point(20, 220);
@@ -368,10 +369,10 @@ namespace Injector_UI
             // 
             // chkCheckForUpdates
             // 
-            chkCheckForUpdates.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkCheckForUpdates.CheckedState.BorderColor = Color.Purple;
             chkCheckForUpdates.CheckedState.BorderRadius = 0;
             chkCheckForUpdates.CheckedState.BorderThickness = 0;
-            chkCheckForUpdates.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkCheckForUpdates.CheckedState.FillColor = Color.Purple;
             chkCheckForUpdates.Font = new Font("Segoe UI", 10F);
             chkCheckForUpdates.ForeColor = Color.White;
             chkCheckForUpdates.Location = new Point(20, 250);
@@ -385,10 +386,10 @@ namespace Injector_UI
             // 
             // chkSaveLogs
             // 
-            chkSaveLogs.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkSaveLogs.CheckedState.BorderColor = Color.Purple;
             chkSaveLogs.CheckedState.BorderRadius = 0;
             chkSaveLogs.CheckedState.BorderThickness = 0;
-            chkSaveLogs.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkSaveLogs.CheckedState.FillColor = Color.Purple;
             chkSaveLogs.Font = new Font("Segoe UI", 10F);
             chkSaveLogs.ForeColor = Color.White;
             chkSaveLogs.Location = new Point(20, 280);
@@ -487,7 +488,7 @@ namespace Injector_UI
             trackProcessCheckInterval.Name = "trackProcessCheckInterval";
             trackProcessCheckInterval.Size = new Size(680, 30);
             trackProcessCheckInterval.TabIndex = 2;
-            trackProcessCheckInterval.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackProcessCheckInterval.ThumbColor = Color.Purple;
             trackProcessCheckInterval.Value = 1000;
             trackProcessCheckInterval.ValueChanged += trackProcessCheckInterval_ValueChanged;
             // 
@@ -521,7 +522,7 @@ namespace Injector_UI
             trackInitTimeout.Name = "trackInitTimeout";
             trackInitTimeout.Size = new Size(680, 30);
             trackInitTimeout.TabIndex = 5;
-            trackInitTimeout.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackInitTimeout.ThumbColor = Color.Purple;
             trackInitTimeout.Value = 30000;
             trackInitTimeout.ValueChanged += trackInitTimeout_ValueChanged;
             // 
@@ -555,7 +556,7 @@ namespace Injector_UI
             trackInjectionTimeout.Name = "trackInjectionTimeout";
             trackInjectionTimeout.Size = new Size(680, 30);
             trackInjectionTimeout.TabIndex = 8;
-            trackInjectionTimeout.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackInjectionTimeout.ThumbColor = Color.Purple;
             trackInjectionTimeout.Value = 15000;
             trackInjectionTimeout.ValueChanged += trackInjectionTimeout_ValueChanged;
             // 
@@ -589,7 +590,7 @@ namespace Injector_UI
             trackMaxRetries.Name = "trackMaxRetries";
             trackMaxRetries.Size = new Size(680, 30);
             trackMaxRetries.TabIndex = 11;
-            trackMaxRetries.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackMaxRetries.ThumbColor = Color.Purple;
             trackMaxRetries.Value = 3;
             trackMaxRetries.ValueChanged += trackMaxRetries_ValueChanged;
             // 
@@ -623,7 +624,7 @@ namespace Injector_UI
             trackRetryDelay.Name = "trackRetryDelay";
             trackRetryDelay.Size = new Size(680, 30);
             trackRetryDelay.TabIndex = 14;
-            trackRetryDelay.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackRetryDelay.ThumbColor = Color.Purple;
             trackRetryDelay.Value = 2000;
             trackRetryDelay.ValueChanged += trackRetryDelay_ValueChanged;
             // 
@@ -674,7 +675,7 @@ namespace Injector_UI
             trackGameLoadTimeout.Name = "trackGameLoadTimeout";
             trackGameLoadTimeout.Size = new Size(680, 30);
             trackGameLoadTimeout.TabIndex = 18;
-            trackGameLoadTimeout.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackGameLoadTimeout.ThumbColor = Color.Purple;
             trackGameLoadTimeout.Value = 60;
             trackGameLoadTimeout.ValueChanged += trackGameLoadTimeout_ValueChanged;
             // 
@@ -791,16 +792,16 @@ namespace Injector_UI
             trackFontSize.Name = "trackFontSize";
             trackFontSize.Size = new Size(680, 30);
             trackFontSize.TabIndex = 6;
-            trackFontSize.ThumbColor = Color.FromArgb(160, 113, 255);
+            trackFontSize.ThumbColor = Color.Purple;
             trackFontSize.Value = 10;
             trackFontSize.ValueChanged += TrackFontSize_ValueChanged;
             // 
             // chkShowDetailedLogs
             // 
-            chkShowDetailedLogs.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkShowDetailedLogs.CheckedState.BorderColor = Color.Purple;
             chkShowDetailedLogs.CheckedState.BorderRadius = 0;
             chkShowDetailedLogs.CheckedState.BorderThickness = 0;
-            chkShowDetailedLogs.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkShowDetailedLogs.CheckedState.FillColor = Color.Purple;
             chkShowDetailedLogs.Font = new Font("Segoe UI", 10F);
             chkShowDetailedLogs.ForeColor = Color.White;
             chkShowDetailedLogs.Location = new Point(20, 190);
@@ -814,10 +815,10 @@ namespace Injector_UI
             // 
             // chkShowTimestamps
             // 
-            chkShowTimestamps.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkShowTimestamps.CheckedState.BorderColor = Color.Purple;
             chkShowTimestamps.CheckedState.BorderRadius = 0;
             chkShowTimestamps.CheckedState.BorderThickness = 0;
-            chkShowTimestamps.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkShowTimestamps.CheckedState.FillColor = Color.Purple;
             chkShowTimestamps.Font = new Font("Segoe UI", 10F);
             chkShowTimestamps.ForeColor = Color.White;
             chkShowTimestamps.Location = new Point(20, 220);
@@ -831,10 +832,10 @@ namespace Injector_UI
             // 
             // chkAlwaysOnTop
             // 
-            chkAlwaysOnTop.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkAlwaysOnTop.CheckedState.BorderColor = Color.Purple;
             chkAlwaysOnTop.CheckedState.BorderRadius = 0;
             chkAlwaysOnTop.CheckedState.BorderThickness = 0;
-            chkAlwaysOnTop.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkAlwaysOnTop.CheckedState.FillColor = Color.Purple;
             chkAlwaysOnTop.Font = new Font("Segoe UI", 10F);
             chkAlwaysOnTop.ForeColor = Color.White;
             chkAlwaysOnTop.Location = new Point(20, 250);
@@ -848,10 +849,10 @@ namespace Injector_UI
             // 
             // chkShowTrayNotifications
             // 
-            chkShowTrayNotifications.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkShowTrayNotifications.CheckedState.BorderColor = Color.Purple;
             chkShowTrayNotifications.CheckedState.BorderRadius = 0;
             chkShowTrayNotifications.CheckedState.BorderThickness = 0;
-            chkShowTrayNotifications.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkShowTrayNotifications.CheckedState.FillColor = Color.Purple;
             chkShowTrayNotifications.Font = new Font("Segoe UI", 10F);
             chkShowTrayNotifications.ForeColor = Color.White;
             chkShowTrayNotifications.Location = new Point(20, 280);
@@ -885,10 +886,10 @@ namespace Injector_UI
             // 
             // chkWarnOnlineMode
             // 
-            chkWarnOnlineMode.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkWarnOnlineMode.CheckedState.BorderColor = Color.Purple;
             chkWarnOnlineMode.CheckedState.BorderRadius = 0;
             chkWarnOnlineMode.CheckedState.BorderThickness = 0;
-            chkWarnOnlineMode.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkWarnOnlineMode.CheckedState.FillColor = Color.Purple;
             chkWarnOnlineMode.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkWarnOnlineMode.ForeColor = Color.White;
             chkWarnOnlineMode.Location = new Point(20, 20);
@@ -912,10 +913,10 @@ namespace Injector_UI
             // 
             // chkVerifyDllSignatures
             // 
-            chkVerifyDllSignatures.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkVerifyDllSignatures.CheckedState.BorderColor = Color.Purple;
             chkVerifyDllSignatures.CheckedState.BorderRadius = 0;
             chkVerifyDllSignatures.CheckedState.BorderThickness = 0;
-            chkVerifyDllSignatures.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkVerifyDllSignatures.CheckedState.FillColor = Color.Purple;
             chkVerifyDllSignatures.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkVerifyDllSignatures.ForeColor = Color.White;
             chkVerifyDllSignatures.Location = new Point(20, 100);
@@ -939,10 +940,10 @@ namespace Injector_UI
             // 
             // chkSafeMode
             // 
-            chkSafeMode.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkSafeMode.CheckedState.BorderColor = Color.Purple;
             chkSafeMode.CheckedState.BorderRadius = 0;
             chkSafeMode.CheckedState.BorderThickness = 0;
-            chkSafeMode.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkSafeMode.CheckedState.FillColor = Color.Purple;
             chkSafeMode.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkSafeMode.ForeColor = Color.White;
             chkSafeMode.Location = new Point(20, 180);
@@ -966,10 +967,10 @@ namespace Injector_UI
             // 
             // chkRequireAdminPrivileges
             // 
-            chkRequireAdminPrivileges.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkRequireAdminPrivileges.CheckedState.BorderColor = Color.Purple;
             chkRequireAdminPrivileges.CheckedState.BorderRadius = 0;
             chkRequireAdminPrivileges.CheckedState.BorderThickness = 0;
-            chkRequireAdminPrivileges.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkRequireAdminPrivileges.CheckedState.FillColor = Color.Purple;
             chkRequireAdminPrivileges.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkRequireAdminPrivileges.ForeColor = Color.White;
             chkRequireAdminPrivileges.Location = new Point(20, 260);
@@ -993,10 +994,10 @@ namespace Injector_UI
             // 
             // chkScanForMalware
             // 
-            chkScanForMalware.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
+            chkScanForMalware.CheckedState.BorderColor = Color.Purple;
             chkScanForMalware.CheckedState.BorderRadius = 0;
             chkScanForMalware.CheckedState.BorderThickness = 0;
-            chkScanForMalware.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
+            chkScanForMalware.CheckedState.FillColor = Color.Purple;
             chkScanForMalware.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkScanForMalware.ForeColor = Color.White;
             chkScanForMalware.Location = new Point(20, 340);
@@ -1038,11 +1039,11 @@ namespace Injector_UI
             // 
             dgvCustomDlls.AllowUserToAddRows = false;
             dgvCustomDlls.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.BackColor = Color.White;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(225, 191, 231);
             dgvCustomDlls.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dgvCustomDlls.BackgroundColor = Color.FromArgb(25, 25, 25);
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(160, 113, 255);
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(156, 39, 176);
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             dataGridViewCellStyle2.ForeColor = Color.White;
             dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
@@ -1052,14 +1053,14 @@ namespace Injector_UI
             dgvCustomDlls.ColumnHeadersHeight = 40;
             dgvCustomDlls.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3, dataGridViewTextBoxColumn4, dataGridViewTextBoxColumn5 });
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(30, 30, 30);
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(235, 212, 239);
             dataGridViewCellStyle3.Font = new Font("Segoe UI", 10F);
-            dataGridViewCellStyle3.ForeColor = Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(160, 113, 255);
-            dataGridViewCellStyle3.SelectionForeColor = Color.White;
+            dataGridViewCellStyle3.ForeColor = Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(189, 111, 202);
+            dataGridViewCellStyle3.SelectionForeColor = Color.Black;
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
             dgvCustomDlls.DefaultCellStyle = dataGridViewCellStyle3;
-            dgvCustomDlls.GridColor = Color.FromArgb(40, 40, 40);
+            dgvCustomDlls.GridColor = Color.FromArgb(224, 188, 231);
             dgvCustomDlls.Location = new Point(10, 10);
             dgvCustomDlls.MultiSelect = false;
             dgvCustomDlls.Name = "dgvCustomDlls";
@@ -1067,27 +1068,28 @@ namespace Injector_UI
             dgvCustomDlls.RowHeadersVisible = false;
             dgvCustomDlls.Size = new Size(670, 472);
             dgvCustomDlls.TabIndex = 0;
-            dgvCustomDlls.ThemeStyle.AlternatingRowsStyle.BackColor = Color.White;
+            dgvCustomDlls.Theme = Guna.UI2.WinForms.Enums.DataGridViewPresetThemes.Purple;
+            dgvCustomDlls.ThemeStyle.AlternatingRowsStyle.BackColor = Color.FromArgb(225, 191, 231);
             dgvCustomDlls.ThemeStyle.AlternatingRowsStyle.Font = null;
             dgvCustomDlls.ThemeStyle.AlternatingRowsStyle.ForeColor = Color.Empty;
             dgvCustomDlls.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = Color.Empty;
             dgvCustomDlls.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = Color.Empty;
             dgvCustomDlls.ThemeStyle.BackColor = Color.FromArgb(25, 25, 25);
-            dgvCustomDlls.ThemeStyle.GridColor = Color.FromArgb(40, 40, 40);
-            dgvCustomDlls.ThemeStyle.HeaderStyle.BackColor = Color.FromArgb(160, 113, 255);
+            dgvCustomDlls.ThemeStyle.GridColor = Color.FromArgb(224, 188, 231);
+            dgvCustomDlls.ThemeStyle.HeaderStyle.BackColor = Color.FromArgb(156, 39, 176);
             dgvCustomDlls.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None;
             dgvCustomDlls.ThemeStyle.HeaderStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             dgvCustomDlls.ThemeStyle.HeaderStyle.ForeColor = Color.White;
             dgvCustomDlls.ThemeStyle.HeaderStyle.HeaightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvCustomDlls.ThemeStyle.HeaderStyle.Height = 40;
             dgvCustomDlls.ThemeStyle.ReadOnly = true;
-            dgvCustomDlls.ThemeStyle.RowsStyle.BackColor = Color.FromArgb(30, 30, 30);
+            dgvCustomDlls.ThemeStyle.RowsStyle.BackColor = Color.FromArgb(235, 212, 239);
             dgvCustomDlls.ThemeStyle.RowsStyle.BorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dgvCustomDlls.ThemeStyle.RowsStyle.Font = new Font("Segoe UI", 10F);
-            dgvCustomDlls.ThemeStyle.RowsStyle.ForeColor = Color.White;
+            dgvCustomDlls.ThemeStyle.RowsStyle.ForeColor = Color.Black;
             dgvCustomDlls.ThemeStyle.RowsStyle.Height = 25;
-            dgvCustomDlls.ThemeStyle.RowsStyle.SelectionBackColor = Color.FromArgb(160, 113, 255);
-            dgvCustomDlls.ThemeStyle.RowsStyle.SelectionForeColor = Color.White;
+            dgvCustomDlls.ThemeStyle.RowsStyle.SelectionBackColor = Color.FromArgb(189, 111, 202);
+            dgvCustomDlls.ThemeStyle.RowsStyle.SelectionForeColor = Color.Black;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -1121,6 +1123,7 @@ namespace Injector_UI
             // 
             // btnAddDll
             // 
+            btnAddDll.BorderRadius = 8;
             btnAddDll.CustomizableEdges = customizableEdges13;
             btnAddDll.FillColor = Color.FromArgb(40, 167, 69);
             btnAddDll.FillColor2 = Color.FromArgb(25, 135, 84);
@@ -1136,6 +1139,7 @@ namespace Injector_UI
             // 
             // btnEditDll
             // 
+            btnEditDll.BorderRadius = 8;
             btnEditDll.CustomizableEdges = customizableEdges15;
             btnEditDll.FillColor = Color.FromArgb(0, 123, 255);
             btnEditDll.FillColor2 = Color.FromArgb(0, 86, 179);
@@ -1151,6 +1155,7 @@ namespace Injector_UI
             // 
             // btnRemoveDll
             // 
+            btnRemoveDll.BorderRadius = 8;
             btnRemoveDll.CustomizableEdges = customizableEdges17;
             btnRemoveDll.FillColor = Color.FromArgb(220, 53, 69);
             btnRemoveDll.FillColor2 = Color.FromArgb(176, 42, 55);
@@ -1166,9 +1171,10 @@ namespace Injector_UI
             // 
             // btnMoveUp
             // 
+            btnMoveUp.BorderRadius = 8;
             btnMoveUp.CustomizableEdges = customizableEdges19;
-            btnMoveUp.FillColor = Color.FromArgb(108, 117, 125);
-            btnMoveUp.FillColor2 = Color.FromArgb(73, 80, 87);
+            btnMoveUp.FillColor = Color.Purple;
+            btnMoveUp.FillColor2 = Color.DarkMagenta;
             btnMoveUp.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnMoveUp.ForeColor = Color.White;
             btnMoveUp.Location = new Point(690, 200);
@@ -1181,9 +1187,10 @@ namespace Injector_UI
             // 
             // btnMoveDown
             // 
+            btnMoveDown.BorderRadius = 8;
             btnMoveDown.CustomizableEdges = customizableEdges21;
-            btnMoveDown.FillColor = Color.FromArgb(108, 117, 125);
-            btnMoveDown.FillColor2 = Color.FromArgb(73, 80, 87);
+            btnMoveDown.FillColor = Color.Purple;
+            btnMoveDown.FillColor2 = Color.DarkMagenta;
             btnMoveDown.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnMoveDown.ForeColor = Color.White;
             btnMoveDown.Location = new Point(690, 255);
@@ -1240,6 +1247,7 @@ namespace Injector_UI
             // 
             // btnNewProfile
             // 
+            btnNewProfile.BorderRadius = 8;
             btnNewProfile.CustomizableEdges = customizableEdges25;
             btnNewProfile.FillColor = Color.FromArgb(40, 167, 69);
             btnNewProfile.FillColor2 = Color.FromArgb(25, 135, 84);
@@ -1255,6 +1263,7 @@ namespace Injector_UI
             // 
             // btnDuplicateProfile
             // 
+            btnDuplicateProfile.BorderRadius = 8;
             btnDuplicateProfile.CustomizableEdges = customizableEdges27;
             btnDuplicateProfile.FillColor = Color.FromArgb(0, 123, 255);
             btnDuplicateProfile.FillColor2 = Color.FromArgb(0, 86, 179);
@@ -1270,6 +1279,7 @@ namespace Injector_UI
             // 
             // btnDeleteProfile
             // 
+            btnDeleteProfile.BorderRadius = 8;
             btnDeleteProfile.CustomizableEdges = customizableEdges29;
             btnDeleteProfile.FillColor = Color.FromArgb(220, 53, 69);
             btnDeleteProfile.FillColor2 = Color.FromArgb(176, 42, 55);
@@ -1416,6 +1426,7 @@ namespace Injector_UI
             // 
             // btnSave
             // 
+            btnSave.BorderRadius = 8;
             btnSave.CustomizableEdges = customizableEdges37;
             btnSave.FillColor = Color.FromArgb(40, 167, 69);
             btnSave.FillColor2 = Color.FromArgb(25, 135, 84);
@@ -1431,6 +1442,7 @@ namespace Injector_UI
             // 
             // btnCancel
             // 
+            btnCancel.BorderRadius = 8;
             btnCancel.CustomizableEdges = customizableEdges39;
             btnCancel.FillColor = Color.FromArgb(108, 117, 125);
             btnCancel.FillColor2 = Color.FromArgb(73, 80, 87);
@@ -1446,6 +1458,7 @@ namespace Injector_UI
             // 
             // btnApply
             // 
+            btnApply.BorderRadius = 8;
             btnApply.CustomizableEdges = customizableEdges41;
             btnApply.FillColor = Color.FromArgb(0, 123, 255);
             btnApply.FillColor2 = Color.FromArgb(0, 86, 179);
@@ -1461,6 +1474,7 @@ namespace Injector_UI
             // 
             // btnRestoreDefaults
             // 
+            btnRestoreDefaults.BorderRadius = 8;
             btnRestoreDefaults.CustomizableEdges = customizableEdges43;
             btnRestoreDefaults.FillColor = Color.FromArgb(255, 193, 7);
             btnRestoreDefaults.FillColor2 = Color.FromArgb(255, 143, 0);
@@ -1482,6 +1496,7 @@ namespace Injector_UI
             // 
             // SettingsForm
             // 
+            Icon = (Icon)resources.GetObject("$this.Icon");
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
