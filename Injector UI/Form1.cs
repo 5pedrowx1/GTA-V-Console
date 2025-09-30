@@ -21,15 +21,123 @@ namespace Injector_UI
 
         private void ApplyConfiguration()
         {
-            // Aplicar configurações da interface
-            this.Size = new Size(config.Interface.WindowWidth, config.Interface.WindowHeight);
+            this.Size = new Size(
+                Math.Max(config.Interface.WindowWidth, 800),
+                Math.Max(config.Interface.WindowHeight, 555)
+            );
             this.TopMost = config.Interface.AlwaysOnTop;
 
-            // Aplicar estado do AutoInject
-            chkAutoInject.Checked = config.General.AutoInject;
+            txtOut.Font = new Font(txtOut.Font.FontFamily, config.Interface.FontSize);
 
-            // Atualizar versão
             lblVersion.Text = "v2.0.0";
+
+            ApplyTheme(config.Interface.Theme, config.Interface.AccentColor);
+        }
+
+        private void ApplyTheme(string theme, string accentColor)
+        {
+            Color bgColor, fgColor, accent;
+
+            // Definir cores baseadas no tema
+            if (theme == "Dark")
+            {
+                bgColor = Color.FromArgb(32, 32, 32);
+                fgColor = Color.White;
+            }
+            else // Light
+            {
+                bgColor = Color.FromArgb(240, 240, 240);
+                fgColor = Color.Black;
+            }
+
+            // Definir cor de destaque
+            accent = accentColor switch
+            {
+                "Purple" => Color.FromArgb(138, 43, 226),
+                "Blue" => Color.FromArgb(0, 120, 215),
+                "Green" => Color.FromArgb(16, 124, 16),
+                "Red" => Color.FromArgb(232, 17, 35),
+                "Orange" => Color.FromArgb(255, 140, 0),
+                _ => Color.FromArgb(138, 43, 226)
+            };
+
+            // Aplicar tema
+            this.BackColor = bgColor;
+            this.ForeColor = fgColor;
+
+            // Aplicar aos controles principais
+            foreach (Control control in this.Controls)
+            {
+                if (control is Panel || control is GroupBox)
+                {
+                    control.BackColor = bgColor;
+                    control.ForeColor = fgColor;
+                }
+
+                if (control is Button btn)
+                {
+                    btn.BackColor = accent;
+                    btn.ForeColor = Color.White;
+                }
+            }
+
+            // Aplicar ao TextBox de logs
+            txtOut.BackColor = theme == "Dark" ? Color.FromArgb(20, 20, 20) : Color.White;
+            txtOut.ForeColor = fgColor;
+        }
+
+        private bool CheckOnlineMode(ProcessInfo processInfo)
+        {
+            if (!config.Security.WarnOnlineMode)
+                return true;
+
+            try
+            {
+                // Verificar se está no modo online através de processos
+                var socialClubRunning = Process.GetProcessesByName("SocialClubHelper").Length > 0;
+                var gtaOnline = Process.GetProcessesByName("GTAVLauncher").Length > 0;
+
+                if (socialClubRunning || gtaOnline)
+                {
+                    AppendLog("", Color.White);
+                    AppendLog("╔════════════════════════════════════════╗", Color.Red);
+                    AppendLog("║         ⚠ AVISO DE SEGURANÇA ⚠        ║", Color.Red);
+                    AppendLog("╚════════════════════════════════════════╝", Color.Red);
+                    AppendLog("[⚠] O GTA V pode estar em modo online!", Color.Orange);
+                    AppendLog("[!] Usar mods online pode resultar em BAN!", Color.Red);
+                    AppendLog("[i] Recomendamos usar apenas em Story Mode", Color.Yellow);
+                    AppendLog("", Color.White);
+
+                    var result = MessageBox.Show(
+                        "O GTA V pode estar em modo ONLINE!\n\n" +
+                        "Usar mods no modo online pode resultar em BAN permanente.\n\n" +
+                        "Deseja continuar mesmo assim? (NÃO RECOMENDADO)",
+                        "⚠ AVISO: Possível Modo Online Detectado",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning,
+                        MessageBoxDefaultButton.Button2
+                    );
+
+                    if (result == DialogResult.No)
+                    {
+                        AppendLog("[✓] Injeção cancelada pelo usuário", Color.LimeGreen);
+                        AppendLog("[i] Use o modo Story Mode para segurança", Color.Cyan);
+                        return false;
+                    }
+
+                    AppendLog("[⚠] Usuário optou por continuar (risco assumido)", Color.Orange);
+                }
+                else
+                {
+                    AppendLog("[✓] Modo Story Mode detectado", Color.LimeGreen);
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[⚠] Não foi possível verificar modo online: {ex.Message}", Color.Orange);
+            }
+
+            return true;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -45,12 +153,23 @@ namespace Injector_UI
                 return;
             }
 
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                config.Interface.WindowWidth = this.Width;
+                config.Interface.WindowHeight = this.Height;
+            }
+
             cancellationToken?.Cancel();
             config.Save();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            if (config.General.CheckForUpdates)
+            {
+                await CheckForUpdatesAsync();
+            }
+
             if (config.General.StartMinimized)
             {
                 this.WindowState = FormWindowState.Minimized;
@@ -64,6 +183,38 @@ namespace Injector_UI
             {
                 AppendLog("[i] Auto-injeção desativada", Color.Yellow);
                 AppendLog("[i] Aguardando comando manual...", Color.Gray);
+            }
+        }
+
+        public void ConfigureStartup(bool enable)
+        {
+            try
+            {
+                using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                    @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+
+                if (key == null) return;
+
+                var appName = "GTA5_Injector";
+                var appPath = Application.ExecutablePath;
+
+                if (enable)
+                {
+                    key.SetValue(appName, appPath);
+                    AppendLog("[✓] Inicialização automática ativada", Color.LimeGreen);
+                }
+                else
+                {
+                    if (key.GetValue(appName) != null)
+                    {
+                        key.DeleteValue(appName);
+                        AppendLog("[✓] Inicialização automática desativada", Color.Yellow);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[✗] Erro ao configurar inicialização: {ex.Message}", Color.Red);
             }
         }
 
@@ -181,7 +332,6 @@ namespace Injector_UI
             {
                 var profile = config.GetActiveProfile();
 
-                // Verificar privilégios
                 if (config.Security.RequireAdminPrivileges && !IsRunningAsAdmin())
                 {
                     AppendLog("[✗] Privilégios de administrador necessários!", Color.Red);
@@ -195,6 +345,11 @@ namespace Injector_UI
                 else
                 {
                     AppendLog("[⚠] Executando sem privilégios de administrador", Color.Orange);
+                }
+
+                if (!CheckOnlineMode(processInfo))
+                {
+                    return;
                 }
 
                 AppendLog("");
@@ -865,7 +1020,7 @@ namespace Injector_UI
         {
             cancellationToken?.Cancel();
             config.Save();
-            Application.Exit();
+            this.Close();
         }
 
         private void BtnMinimize_Click(object sender, EventArgs e)
@@ -985,6 +1140,45 @@ namespace Injector_UI
             }
 
             return null;
+        }
+
+        private async Task CheckForUpdatesAsync()
+        {
+            if (!config.General.CheckForUpdates)
+                return;
+
+            try
+            {
+                AppendLog("[i] Verificando atualizações...", Color.Cyan);
+
+                // Aqui você implementaria a lógica real de verificação
+                // Por exemplo, consultar uma API ou GitHub Releases
+
+                // Simulação:
+                await Task.Delay(1000);
+
+                var currentVersion = new Version("2.0.0");
+                // var latestVersion = await GetLatestVersionFromServer();
+
+                // if (latestVersion > currentVersion)
+                // {
+                //     AppendLog($"[✓] Nova versão disponível: v{latestVersion}", Color.LimeGreen);
+                // }
+                // else
+                // {
+                //     AppendLog("[✓] Você está usando a versão mais recente", Color.LimeGreen);
+                // }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"[⚠] Erro ao verificar atualizações: {ex.Message}", Color.Orange);
+            }
+        }
+
+        private async void BtnInject_Click(object sender, EventArgs e)
+        {
+            var processInfo = await FindProcessAsync();
+            await ExecuteInjectionAsync(processInfo);
         }
     }
 }

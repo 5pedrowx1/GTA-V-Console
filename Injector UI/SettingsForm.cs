@@ -8,6 +8,7 @@ namespace Injector_UI
     {
         private AppConfig config;
         private AppConfig originalConfig;
+        private Form1 form = new();
 
         public AppConfig UpdatedConfig => config;
 
@@ -191,8 +192,7 @@ namespace Injector_UI
             config.Injection.RetryDelay = trackRetryDelay.Value;
             config.Injection.WaitForGameLoad = chkWaitForGameLoad.Checked;
             config.Injection.GameLoadTimeout = trackGameLoadTimeout.Value;
-            config.Injection.PostInjectionDelay = trackPostInjectionDelay.Value;
-
+            
             // Interface
             config.Interface.Theme = cmbTheme.SelectedItem?.ToString() ?? "Dark";
             config.Interface.AccentColor = cmbAccentColor.SelectedItem?.ToString() ?? "Purple";
@@ -246,6 +246,12 @@ namespace Injector_UI
         private void BtnSave_Click(object sender, EventArgs e)
         {
             SaveSettings();
+
+            if (config.General.RunOnStartup != originalConfig.General.RunOnStartup)
+            {
+                form.ConfigureStartup(config.General.RunOnStartup);
+            }
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -598,11 +604,6 @@ namespace Injector_UI
         private void trackGameLoadTimeout_ValueChanged(object sender, EventArgs e)
         {
             lblGameLoadTimeoutValue.Text = $"{trackGameLoadTimeout.Value}s";
-        }
-
-        private void trackPostInjectionDelay_ValueChanged(object sender, EventArgs e)
-        {
-            lblPostInjectionDelayValue.Text = $"{trackPostInjectionDelay.Value}ms";
         }
     }
 }

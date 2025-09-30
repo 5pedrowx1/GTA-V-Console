@@ -29,12 +29,14 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             txtOut = new Guna.UI2.WinForms.Guna2TextBox();
             lblName = new Guna.UI2.WinForms.Guna2HtmlLabel();
             guna2DragControl1 = new Guna.UI2.WinForms.Guna2DragControl(components);
@@ -46,9 +48,9 @@
             lblStatus = new Guna.UI2.WinForms.Guna2HtmlLabel();
             indicatorStatus = new Guna.UI2.WinForms.Guna2CircleProgressBar();
             panelControls = new Guna.UI2.WinForms.Guna2Panel();
+            BtnInject = new Guna.UI2.WinForms.Guna2GradientButton();
             btnSettings = new Guna.UI2.WinForms.Guna2GradientButton();
             btnClearLog = new Guna.UI2.WinForms.Guna2GradientButton();
-            chkAutoInject = new Guna.UI2.WinForms.Guna2CheckBox();
             guna2Separator1 = new Guna.UI2.WinForms.Guna2Separator();
             panelTop.SuspendLayout();
             panelStatus.SuspendLayout();
@@ -193,7 +195,7 @@
             // 
             lblStatus.BackColor = Color.Transparent;
             lblStatus.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lblStatus.ForeColor = Color.Cyan;
+            lblStatus.ForeColor = Color.Purple;
             lblStatus.Location = new Point(65, 23);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(151, 22);
@@ -224,20 +226,41 @@
             panelControls.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             panelControls.BackColor = Color.FromArgb(20, 20, 20);
             panelControls.BorderRadius = 10;
+            panelControls.Controls.Add(BtnInject);
             panelControls.Controls.Add(btnSettings);
             panelControls.Controls.Add(btnClearLog);
-            panelControls.Controls.Add(chkAutoInject);
-            panelControls.CustomizableEdges = customizableEdges16;
+            panelControls.CustomizableEdges = customizableEdges18;
             panelControls.Location = new Point(525, 65);
             panelControls.Name = "panelControls";
-            panelControls.ShadowDecoration.CustomizableEdges = customizableEdges17;
+            panelControls.ShadowDecoration.CustomizableEdges = customizableEdges19;
             panelControls.Size = new Size(260, 70);
             panelControls.TabIndex = 7;
+            // 
+            // BtnInject
+            // 
+            BtnInject.BorderRadius = 8;
+            BtnInject.CustomizableEdges = customizableEdges12;
+            BtnInject.DisabledState.BorderColor = Color.DarkGray;
+            BtnInject.DisabledState.CustomBorderColor = Color.DarkGray;
+            BtnInject.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            BtnInject.DisabledState.FillColor2 = Color.FromArgb(169, 169, 169);
+            BtnInject.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            BtnInject.FillColor = Color.FromArgb(255, 128, 128);
+            BtnInject.FillColor2 = Color.Red;
+            BtnInject.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            BtnInject.ForeColor = Color.White;
+            BtnInject.Location = new Point(175, 15);
+            BtnInject.Name = "BtnInject";
+            BtnInject.ShadowDecoration.CustomizableEdges = customizableEdges13;
+            BtnInject.Size = new Size(73, 40);
+            BtnInject.TabIndex = 3;
+            BtnInject.Text = "💉 Inject";
+            BtnInject.Click += BtnInject_Click;
             // 
             // btnSettings
             // 
             btnSettings.BorderRadius = 8;
-            btnSettings.CustomizableEdges = customizableEdges12;
+            btnSettings.CustomizableEdges = customizableEdges14;
             btnSettings.DisabledState.BorderColor = Color.DarkGray;
             btnSettings.DisabledState.CustomBorderColor = Color.DarkGray;
             btnSettings.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -247,10 +270,10 @@
             btnSettings.FillColor2 = Color.DarkMagenta;
             btnSettings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnSettings.ForeColor = Color.White;
-            btnSettings.Location = new Point(135, 15);
+            btnSettings.Location = new Point(96, 15);
             btnSettings.Name = "btnSettings";
-            btnSettings.ShadowDecoration.CustomizableEdges = customizableEdges13;
-            btnSettings.Size = new Size(110, 40);
+            btnSettings.ShadowDecoration.CustomizableEdges = customizableEdges15;
+            btnSettings.Size = new Size(73, 40);
             btnSettings.TabIndex = 2;
             btnSettings.Text = "⚙ Config";
             btnSettings.Click += BtnSettings_Click;
@@ -258,7 +281,7 @@
             // btnClearLog
             // 
             btnClearLog.BorderRadius = 8;
-            btnClearLog.CustomizableEdges = customizableEdges14;
+            btnClearLog.CustomizableEdges = customizableEdges16;
             btnClearLog.DisabledState.BorderColor = Color.DarkGray;
             btnClearLog.DisabledState.CustomBorderColor = Color.DarkGray;
             btnClearLog.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -270,32 +293,11 @@
             btnClearLog.ForeColor = Color.White;
             btnClearLog.Location = new Point(15, 15);
             btnClearLog.Name = "btnClearLog";
-            btnClearLog.ShadowDecoration.CustomizableEdges = customizableEdges15;
-            btnClearLog.Size = new Size(110, 40);
+            btnClearLog.ShadowDecoration.CustomizableEdges = customizableEdges17;
+            btnClearLog.Size = new Size(75, 40);
             btnClearLog.TabIndex = 1;
             btnClearLog.Text = "🗑 Limpar";
             btnClearLog.Click += BtnClearLog_Click;
-            // 
-            // chkAutoInject
-            // 
-            chkAutoInject.AutoSize = true;
-            chkAutoInject.Checked = true;
-            chkAutoInject.CheckedState.BorderColor = Color.Purple;
-            chkAutoInject.CheckedState.BorderRadius = 0;
-            chkAutoInject.CheckedState.BorderThickness = 0;
-            chkAutoInject.CheckedState.FillColor = Color.Purple;
-            chkAutoInject.CheckState = CheckState.Checked;
-            chkAutoInject.Font = new Font("Segoe UI", 9F);
-            chkAutoInject.ForeColor = Color.White;
-            chkAutoInject.Location = new Point(220, 65);
-            chkAutoInject.Name = "chkAutoInject";
-            chkAutoInject.Size = new Size(15, 14);
-            chkAutoInject.TabIndex = 0;
-            chkAutoInject.UncheckedState.BorderColor = Color.FromArgb(125, 137, 149);
-            chkAutoInject.UncheckedState.BorderRadius = 0;
-            chkAutoInject.UncheckedState.BorderThickness = 0;
-            chkAutoInject.UncheckedState.FillColor = Color.FromArgb(125, 137, 149);
-            chkAutoInject.Visible = false;
             // 
             // guna2Separator1
             // 
@@ -330,7 +332,6 @@
             panelStatus.ResumeLayout(false);
             panelStatus.PerformLayout();
             panelControls.ResumeLayout(false);
-            panelControls.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -348,7 +349,7 @@
         private Guna.UI2.WinForms.Guna2Panel panelControls;
         private Guna.UI2.WinForms.Guna2GradientButton btnSettings;
         private Guna.UI2.WinForms.Guna2GradientButton btnClearLog;
-        private Guna.UI2.WinForms.Guna2CheckBox chkAutoInject;
         private Guna.UI2.WinForms.Guna2Separator guna2Separator1;
+        private Guna.UI2.WinForms.Guna2GradientButton BtnInject;
     }
 }
