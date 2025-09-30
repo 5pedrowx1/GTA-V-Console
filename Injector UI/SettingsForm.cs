@@ -62,28 +62,25 @@ namespace Injector_UI
                 config.Injection = new InjectionSettings();
             }
 
-            trackProcessCheckInterval.Value = Math.Clamp(config.Injection.ProcessCheckInterval, 500, 10000);
-            lblProcessCheckValue.Text = $"{config.Injection.ProcessCheckInterval}ms";
+            trackProcessCheckInterval.Value = Math.Clamp(config.Injection.ProcessCheckInterval > 0 ? config.Injection.ProcessCheckInterval : 1000, 100, 10000);
+            lblProcessCheckValue.Text = $"{trackProcessCheckInterval.Value}ms";
 
-            trackInitTimeout.Value = Math.Clamp(config.Injection.InitializationTimeout, 5000, 60000);
-            lblInitTimeoutValue.Text = $"{config.Injection.InitializationTimeout}ms";
+            trackInitTimeout.Value = Math.Clamp(config.Injection.InitializationTimeout > 0 ? config.Injection.InitializationTimeout : 30000, 1000, 60000);
+            lblInitTimeoutValue.Text = $"{trackInitTimeout.Value}ms";
 
-            trackInjectionTimeout.Value = Math.Clamp(config.Injection.InjectionTimeout, 5000, 30000);
-            lblInjectionTimeoutValue.Text = $"{config.Injection.InjectionTimeout}ms";
+            trackInjectionTimeout.Value = Math.Clamp(config.Injection.InjectionTimeout > 0 ? config.Injection.InjectionTimeout : 15000, 1000, 30000);
+            lblInjectionTimeoutValue.Text = $"{trackInjectionTimeout.Value}ms";
 
-            trackMaxRetries.Value = Math.Clamp(config.Injection.MaxRetries, 1, 10);
-            lblMaxRetriesValue.Text = config.Injection.MaxRetries.ToString();
+            trackMaxRetries.Value = Math.Clamp(config.Injection.MaxRetries > 0 ? config.Injection.MaxRetries : 3, 1, 10);
+            lblMaxRetriesValue.Text = trackMaxRetries.Value.ToString();
 
-            trackRetryDelay.Value = Math.Clamp(config.Injection.RetryDelay, 500, 10000);
-            lblRetryDelayValue.Text = $"{config.Injection.RetryDelay}ms";
+            trackRetryDelay.Value = Math.Clamp(config.Injection.RetryDelay > 0 ? config.Injection.RetryDelay : 2000, 500, 10000);
+            lblRetryDelayValue.Text = $"{trackRetryDelay.Value}ms";
 
             chkWaitForGameLoad.Checked = config.Injection.WaitForGameLoad;
 
-            trackGameLoadTimeout.Value = Math.Clamp(config.Injection.GameLoadTimeout, 10, 300);
-            lblGameLoadTimeoutValue.Text = $"{config.Injection.GameLoadTimeout}s";
-
-            trackPostInjectionDelay.Value = Math.Clamp(config.Injection.PostInjectionDelay, 0, 10000);
-            lblPostInjectionDelayValue.Text = $"{config.Injection.PostInjectionDelay}ms";
+            trackGameLoadTimeout.Value = Math.Clamp(config.Injection.GameLoadTimeout > 0 ? config.Injection.GameLoadTimeout : 60, 10, 300);
+            lblGameLoadTimeoutValue.Text = $"{trackGameLoadTimeout.Value}s";
         }
 
         private void LoadInterfaceSettings()

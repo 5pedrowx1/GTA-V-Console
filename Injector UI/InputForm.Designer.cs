@@ -28,112 +28,136 @@ namespace Injector_UI
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent(string title, string prompt)
+        private void InitializeComponent()
         {
-            this.Size = new Size(500, 240);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterParent;
-            this.BackColor = Color.FromArgb(18, 18, 18);
-
-            // Top Panel
-            panelTop = new Guna2Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 60,
-                BackColor = Color.FromArgb(20, 20, 20),
-                BorderRadius = 12
-            };
-
-            lblTitle = new Guna2HtmlLabel
-            {
-                Text = title,
-                Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                ForeColor = Color.Purple,
-                Location = new Point(20, 18),
-                AutoSize = true
-            };
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            panelTop = new Guna2Panel();
+            lblTitle = new Guna2HtmlLabel();
+            lblPrompt = new Label();
+            txtInput = new Guna2TextBox();
+            separator = new Guna2Separator();
+            btnCancel = new Guna2GradientButton();
+            btnOk = new Guna2GradientButton();
+            panelTop.SuspendLayout();
+            SuspendLayout();
+            // 
+            // panelTop
+            // 
+            panelTop.BackColor = Color.FromArgb(20, 20, 20);
+            panelTop.BorderRadius = 12;
             panelTop.Controls.Add(lblTitle);
-
-            this.Controls.Add(panelTop);
-
-            // Prompt
-            lblPrompt = new Label
-            {
-                Text = prompt,
-                Location = new Point(30, 80),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Font = new Font("Segoe UI", 10)
-            };
-            this.Controls.Add(lblPrompt);
-
-            // Input
-            txtInput = new Guna2TextBox
-            {
-                Location = new Point(30, 110),
-                Size = new Size(430, 35),
-                BorderRadius = 5,
-                FillColor = Color.FromArgb(30, 30, 30),
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10)
-            };
-            txtInput.KeyPress += (s, e) =>
-            {
-                if (e.KeyChar == (char)Keys.Enter)
-                {
-                    e.Handled = true;
-                    btnOk.PerformClick();
-                }
-                else if (e.KeyChar == (char)Keys.Escape)
-                {
-                    e.Handled = true;
-                    btnCancel.PerformClick();
-                }
-            };
-            this.Controls.Add(txtInput);
-
-            // Separator
-            var separator = new Guna2Separator
-            {
-                Location = new Point(20, 160),
-                Size = new Size(460, 10),
-                FillColor = Color.FromArgb(40, 40, 40)
-            };
-            this.Controls.Add(separator);
-
-            // Buttons
-            btnCancel = new Guna2GradientButton
-            {
-                Text = "✕ Cancelar",
-                Location = new Point(250, 180),
-                Size = new Size(100, 40),
-                FillColor = Color.FromArgb(64, 64, 64),
-                FillColor2 = Color.FromArgb(45, 45, 45),
-                BorderRadius = 8,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold)
-            };
-            btnCancel.Click += (s, e) =>
-            {
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
-            };
-            this.Controls.Add(btnCancel);
-
-            btnOk = new Guna2GradientButton
-            {
-                Text = "✓ OK",
-                Location = new Point(360, 180),
-                Size = new Size(100, 40),
-                FillColor = Color.Purple,
-                FillColor2 = Color.DarkMagenta,
-                BorderRadius = 8,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold)
-            };
+            panelTop.CustomizableEdges = customizableEdges1;
+            panelTop.Dock = DockStyle.Top;
+            panelTop.Location = new Point(0, 0);
+            panelTop.Name = "panelTop";
+            panelTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            panelTop.Size = new Size(484, 58);
+            panelTop.TabIndex = 0;
+            // 
+            // lblTitle
+            // 
+            lblTitle.BackColor = Color.Transparent;
+            lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lblTitle.ForeColor = Color.Purple;
+            lblTitle.Location = new Point(20, 12);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(41, 27);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "Title";
+            // 
+            // lblPrompt
+            // 
+            lblPrompt.AutoSize = true;
+            lblPrompt.Font = new Font("Segoe UI", 10F);
+            lblPrompt.ForeColor = Color.White;
+            lblPrompt.Location = new Point(20, 76);
+            lblPrompt.Name = "lblPrompt";
+            lblPrompt.Size = new Size(55, 19);
+            lblPrompt.TabIndex = 1;
+            lblPrompt.Text = "Prompt";
+            // 
+            // txtInput
+            // 
+            txtInput.BorderRadius = 5;
+            txtInput.CustomizableEdges = customizableEdges3;
+            txtInput.DefaultText = "";
+            txtInput.FillColor = Color.FromArgb(30, 30, 30);
+            txtInput.Font = new Font("Segoe UI", 10F);
+            txtInput.ForeColor = Color.White;
+            txtInput.Location = new Point(20, 106);
+            txtInput.Name = "txtInput";
+            txtInput.PlaceholderText = "";
+            txtInput.SelectedText = "";
+            txtInput.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            txtInput.Size = new Size(430, 35);
+            txtInput.TabIndex = 2;
+            txtInput.KeyPress += TxtInput_KeyPress;
+            // 
+            // separator
+            // 
+            separator.FillColor = Color.FromArgb(40, 40, 40);
+            separator.Location = new Point(20, 160);
+            separator.Name = "separator";
+            separator.Size = new Size(460, 10);
+            separator.TabIndex = 3;
+            // 
+            // btnCancel
+            // 
+            btnCancel.BorderRadius = 8;
+            btnCancel.CustomizableEdges = customizableEdges5;
+            btnCancel.FillColor = Color.FromArgb(64, 64, 64);
+            btnCancel.FillColor2 = Color.FromArgb(45, 45, 45);
+            btnCancel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnCancel.ForeColor = Color.White;
+            btnCancel.Location = new Point(250, 180);
+            btnCancel.Name = "btnCancel";
+            btnCancel.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnCancel.Size = new Size(100, 40);
+            btnCancel.TabIndex = 4;
+            btnCancel.Text = "✕ Cancelar";
+            btnCancel.Click += BtnCancel_Click;
+            // 
+            // btnOk
+            // 
+            btnOk.BorderRadius = 8;
+            btnOk.CustomizableEdges = customizableEdges7;
+            btnOk.FillColor = Color.Purple;
+            btnOk.FillColor2 = Color.DarkMagenta;
+            btnOk.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnOk.ForeColor = Color.White;
+            btnOk.Location = new Point(360, 180);
+            btnOk.Name = "btnOk";
+            btnOk.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnOk.Size = new Size(100, 40);
+            btnOk.TabIndex = 5;
+            btnOk.Text = "✓ OK";
             btnOk.Click += BtnOk_Click;
-            this.Controls.Add(btnOk);
-
-            // Set focus to input
-            this.Shown += (s, e) => txtInput.Focus();
+            // 
+            // InputForm
+            // 
+            BackColor = Color.FromArgb(18, 18, 18);
+            ClientSize = new Size(484, 229);
+            Controls.Add(panelTop);
+            Controls.Add(lblPrompt);
+            Controls.Add(txtInput);
+            Controls.Add(separator);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOk);
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "InputForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Shown += InputForm_Shown;
+            panelTop.ResumeLayout(false);
+            panelTop.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -144,5 +168,6 @@ namespace Injector_UI
         private Guna2Panel panelTop;
         private Guna2HtmlLabel lblTitle;
         private Label lblPrompt;
+        private Guna2Separator separator;
     }
 }
