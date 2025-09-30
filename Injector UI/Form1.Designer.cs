@@ -89,7 +89,7 @@
             // 
             lblName.BackColor = Color.Transparent;
             lblName.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            lblName.ForeColor = Color.Purple;
+            lblName.ForeColor = Color.FromArgb(160, 113, 255);
             lblName.Location = new Point(15, 12);
             lblName.Name = "lblName";
             lblName.Size = new Size(306, 27);
@@ -195,7 +195,7 @@
             // 
             lblStatus.BackColor = Color.Transparent;
             lblStatus.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            lblStatus.ForeColor = Color.Purple;
+            lblStatus.ForeColor = Color.FromArgb(160, 113, 255);
             lblStatus.Location = new Point(65, 23);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(151, 22);
@@ -266,7 +266,7 @@
             btnSettings.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
             btnSettings.DisabledState.FillColor2 = Color.FromArgb(169, 169, 169);
             btnSettings.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnSettings.FillColor = Color.Purple;
+            btnSettings.FillColor = Color.FromArgb(160, 113, 255);
             btnSettings.FillColor2 = Color.DarkMagenta;
             btnSettings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnSettings.ForeColor = Color.White;

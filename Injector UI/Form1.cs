@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security.Principal;
 using System.Text;
+using Guna.UI2.WinForms;
 using Injector_UI.Injector_UI;
 
 namespace Injector_UI
@@ -32,6 +33,11 @@ namespace Injector_UI
             lblVersion.Text = "v2.0.0";
 
             ApplyTheme(config.Interface.Theme, config.Interface.AccentColor);
+
+            if (config.General.AutoInject == true)
+            {
+                BtnInject.Enabled = false;
+            }
         }
 
         private void ApplyTheme(string theme, string accentColor)
@@ -330,6 +336,12 @@ namespace Injector_UI
         {
             try
             {
+                if (processInfo == null)
+                {
+                    AppendLog("[✗] Processo não encontrado!", Color.Red);
+                    return;
+                }
+
                 var profile = config.GetActiveProfile();
 
                 if (config.Security.RequireAdminPrivileges && !IsRunningAsAdmin())
