@@ -31,7 +31,6 @@ namespace Injector_UI
             tabCustomDlls = new TabPage();
             tabProfiles = new TabPage();
 
-            // General Tab Controls
             lblProcessName = new Label();
             txtProcessName = new Guna2TextBox();
             chkAutoInject = new Guna2CheckBox();
@@ -44,7 +43,6 @@ namespace Injector_UI
             lblLogDir = new Label();
             txtLogDirectory = new Guna2TextBox();
 
-            // Injection Tab Controls
             lblProcessCheck = new Label();
             lblProcessCheckValue = new Label();
             trackProcessCheckInterval = new Guna2TrackBar();
@@ -68,7 +66,6 @@ namespace Injector_UI
             lblPostInjectionDelayValue = new Label();
             trackPostInjectionDelay = new Guna2TrackBar();
 
-            // Interface Tab Controls
             lblTheme = new Label();
             cmbTheme = new Guna2ComboBox();
             lblAccent = new Label();
@@ -81,7 +78,6 @@ namespace Injector_UI
             chkAlwaysOnTop = new Guna2CheckBox();
             chkShowTrayNotifications = new Guna2CheckBox();
 
-            // Security Tab Controls
             chkWarnOnlineMode = new Guna2CheckBox();
             lblWarnOnlineDesc = new Label();
             chkVerifyDllSignatures = new Guna2CheckBox();
@@ -93,7 +89,6 @@ namespace Injector_UI
             chkScanForMalware = new Guna2CheckBox();
             lblMalwareDesc = new Label();
 
-            // Custom DLLs Tab Controls
             dgvCustomDlls = new Guna2DataGridView();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
@@ -106,7 +101,6 @@ namespace Injector_UI
             btnMoveUp = new Guna2GradientButton();
             btnMoveDown = new Guna2GradientButton();
 
-            // Profiles Tab Controls
             profileHeaderPanel = new FlowLayoutPanel();
             cmbProfiles = new Guna2ComboBox();
             btnNewProfile = new Guna2GradientButton();
@@ -120,7 +114,6 @@ namespace Injector_UI
             chkProfileDotNet = new Guna2CheckBox();
             chkProfileCustomDlls = new Guna2CheckBox();
 
-            // Bottom Buttons
             btnSave = new Guna2GradientButton();
             btnCancel = new Guna2GradientButton();
             btnApply = new Guna2GradientButton();
@@ -152,7 +145,6 @@ namespace Injector_UI
             panelTop.Size = new Size(900, 60);
             panelTop.TabIndex = 0;
 
-            // lblTitle
             lblTitle.BackColor = Color.Transparent;
             lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             lblTitle.ForeColor = Color.White;
@@ -162,7 +154,6 @@ namespace Injector_UI
             lblTitle.TabIndex = 0;
             lblTitle.Text = "Configurações";
 
-            // btnClose
             btnClose.DisabledState.BorderColor = Color.DarkGray;
             btnClose.DisabledState.CustomBorderColor = Color.DarkGray;
             btnClose.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -350,9 +341,6 @@ namespace Injector_UI
             tabInjection.Controls.Add(lblGameLoadTimeout);
             tabInjection.Controls.Add(lblGameLoadTimeoutValue);
             tabInjection.Controls.Add(trackGameLoadTimeout);
-            tabInjection.Controls.Add(lblPostInjDelay);
-            tabInjection.Controls.Add(lblPostInjectionDelayValue);
-            tabInjection.Controls.Add(trackPostInjectionDelay);
             tabInjection.Location = new Point(4, 44);
             tabInjection.Name = "tabInjection";
             tabInjection.Padding = new Padding(20);
@@ -360,162 +348,148 @@ namespace Injector_UI
             tabInjection.TabIndex = 1;
             tabInjection.Text = "Injeção";
 
-            int yPos = 20;
-
             lblProcessCheck.AutoSize = true;
             lblProcessCheck.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblProcessCheck.ForeColor = Color.White;
-            lblProcessCheck.Location = new Point(20, yPos);
+            lblProcessCheck.Location = new Point(20, 20);
             lblProcessCheck.Text = "Intervalo de Verificação de Processo:";
 
             lblProcessCheckValue.AutoSize = true;
             lblProcessCheckValue.Font = new Font("Segoe UI", 10F);
             lblProcessCheckValue.ForeColor = Color.FromArgb(160, 113, 255);
-            lblProcessCheckValue.Location = new Point(720, yPos);
+            lblProcessCheckValue.Location = new Point(720, 20);
             lblProcessCheckValue.Text = "1000 ms";
 
-            trackProcessCheckInterval.Location = new Point(20, yPos + 25);
+            trackProcessCheckInterval.Location = new Point(20, 45);
             trackProcessCheckInterval.Maximum = 10000;
             trackProcessCheckInterval.Minimum = 100;
             trackProcessCheckInterval.Name = "trackProcessCheckInterval";
             trackProcessCheckInterval.Size = new Size(680, 30);
             trackProcessCheckInterval.TabIndex = 2;
             trackProcessCheckInterval.ThumbColor = Color.FromArgb(160, 113, 255);
-            trackProcessCheckInterval.Value = 1000;
             trackProcessCheckInterval.ValueChanged += trackProcessCheckInterval_ValueChanged;
-
-            yPos += 70;
+            trackProcessCheckInterval.Value = 1000;
 
             lblInitTimeout.AutoSize = true;
             lblInitTimeout.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblInitTimeout.ForeColor = Color.White;
-            lblInitTimeout.Location = new Point(20, yPos);
+            lblInitTimeout.Location = new Point(20, 90);
             lblInitTimeout.Text = "Timeout de Inicialização:";
 
             lblInitTimeoutValue.AutoSize = true;
             lblInitTimeoutValue.Font = new Font("Segoe UI", 10F);
             lblInitTimeoutValue.ForeColor = Color.FromArgb(160, 113, 255);
-            lblInitTimeoutValue.Location = new Point(720, yPos);
+            lblInitTimeoutValue.Location = new Point(720, 90);
             lblInitTimeoutValue.Text = "30000 ms";
 
-            trackInitTimeout.Location = new Point(20, yPos + 25);
+            trackInitTimeout.Location = new Point(20, 115);
             trackInitTimeout.Maximum = 60000;
             trackInitTimeout.Minimum = 1000;
             trackInitTimeout.Name = "trackInitTimeout";
             trackInitTimeout.Size = new Size(680, 30);
             trackInitTimeout.TabIndex = 5;
             trackInitTimeout.ThumbColor = Color.FromArgb(160, 113, 255);
-            trackInitTimeout.Value = 30000;
             trackInitTimeout.ValueChanged += trackInitTimeout_ValueChanged;
-
-            yPos += 70;
+            trackInitTimeout.Value = 30000;
 
             lblInjTimeout.AutoSize = true;
             lblInjTimeout.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblInjTimeout.ForeColor = Color.White;
-            lblInjTimeout.Location = new Point(20, yPos);
+            lblInjTimeout.Location = new Point(20, 160);
             lblInjTimeout.Text = "Timeout de Injeção:";
 
             lblInjectionTimeoutValue.AutoSize = true;
             lblInjectionTimeoutValue.Font = new Font("Segoe UI", 10F);
             lblInjectionTimeoutValue.ForeColor = Color.FromArgb(160, 113, 255);
-            lblInjectionTimeoutValue.Location = new Point(720, yPos);
+            lblInjectionTimeoutValue.Location = new Point(720, 160);
             lblInjectionTimeoutValue.Text = "15000 ms";
 
-            trackInjectionTimeout.Location = new Point(20, yPos + 25);
+            trackInjectionTimeout.Location = new Point(20, 185);
             trackInjectionTimeout.Maximum = 30000;
             trackInjectionTimeout.Minimum = 1000;
             trackInjectionTimeout.Name = "trackInjectionTimeout";
             trackInjectionTimeout.Size = new Size(680, 30);
             trackInjectionTimeout.TabIndex = 8;
             trackInjectionTimeout.ThumbColor = Color.FromArgb(160, 113, 255);
-            trackInjectionTimeout.Value = 15000;
             trackInjectionTimeout.ValueChanged += trackInjectionTimeout_ValueChanged;
-
-            yPos += 70;
+            trackInjectionTimeout.Value = 15000;
 
             lblMaxRetries.AutoSize = true;
             lblMaxRetries.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblMaxRetries.ForeColor = Color.White;
-            lblMaxRetries.Location = new Point(20, yPos);
+            lblMaxRetries.Location = new Point(20, 230);
             lblMaxRetries.Text = "Máximo de Tentativas:";
 
             lblMaxRetriesValue.AutoSize = true;
             lblMaxRetriesValue.Font = new Font("Segoe UI", 10F);
             lblMaxRetriesValue.ForeColor = Color.FromArgb(160, 113, 255);
-            lblMaxRetriesValue.Location = new Point(720, yPos);
+            lblMaxRetriesValue.Location = new Point(720, 230);
             lblMaxRetriesValue.Text = "3";
 
-            trackMaxRetries.Location = new Point(20, yPos + 25);
+            trackMaxRetries.Location = new Point(20, 255);
             trackMaxRetries.Maximum = 10;
             trackMaxRetries.Minimum = 1;
             trackMaxRetries.Name = "trackMaxRetries";
             trackMaxRetries.Size = new Size(680, 30);
             trackMaxRetries.TabIndex = 11;
             trackMaxRetries.ThumbColor = Color.FromArgb(160, 113, 255);
-            trackMaxRetries.Value = 3;
             trackMaxRetries.ValueChanged += trackMaxRetries_ValueChanged;
-
-            yPos += 70;
+            trackMaxRetries.Value = 3;
 
             lblRetryDelay.AutoSize = true;
             lblRetryDelay.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblRetryDelay.ForeColor = Color.White;
-            lblRetryDelay.Location = new Point(20, yPos);
+            lblRetryDelay.Location = new Point(20, 300);
             lblRetryDelay.Text = "Atraso entre Tentativas:";
 
             lblRetryDelayValue.AutoSize = true;
             lblRetryDelayValue.Font = new Font("Segoe UI", 10F);
             lblRetryDelayValue.ForeColor = Color.FromArgb(160, 113, 255);
-            lblRetryDelayValue.Location = new Point(720, yPos);
+            lblRetryDelayValue.Location = new Point(720, 300);
             lblRetryDelayValue.Text = "2000 ms";
 
-            trackRetryDelay.Location = new Point(20, yPos + 25);
+            trackRetryDelay.Location = new Point(20, 325);
             trackRetryDelay.Maximum = 10000;
             trackRetryDelay.Minimum = 500;
             trackRetryDelay.Name = "trackRetryDelay";
             trackRetryDelay.Size = new Size(680, 30);
             trackRetryDelay.TabIndex = 14;
             trackRetryDelay.ThumbColor = Color.FromArgb(160, 113, 255);
-            trackRetryDelay.Value = 2000;
             trackRetryDelay.ValueChanged += trackRetryDelay_ValueChanged;
-
-            yPos += 70;
+            trackRetryDelay.Value = 2000;
 
             chkWaitForGameLoad.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
             chkWaitForGameLoad.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
             chkWaitForGameLoad.Font = new Font("Segoe UI", 10F);
             chkWaitForGameLoad.ForeColor = Color.White;
-            chkWaitForGameLoad.Location = new Point(20, yPos);
+            chkWaitForGameLoad.Location = new Point(20, 370);
             chkWaitForGameLoad.Name = "chkWaitForGameLoad";
             chkWaitForGameLoad.Size = new Size(400, 24);
             chkWaitForGameLoad.TabIndex = 15;
             chkWaitForGameLoad.Text = "Aguardar Carregamento Completo do Jogo";
             chkWaitForGameLoad.UncheckedState.BorderColor = Color.FromArgb(60, 60, 60);
 
-            yPos += 40;
-
             lblGameLoadTimeout.AutoSize = true;
             lblGameLoadTimeout.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblGameLoadTimeout.ForeColor = Color.White;
-            lblGameLoadTimeout.Location = new Point(20, yPos);
+            lblGameLoadTimeout.Location = new Point(20, 410);
             lblGameLoadTimeout.Text = "Timeout de Carregamento do Jogo:";
 
             lblGameLoadTimeoutValue.AutoSize = true;
             lblGameLoadTimeoutValue.Font = new Font("Segoe UI", 10F);
             lblGameLoadTimeoutValue.ForeColor = Color.FromArgb(160, 113, 255);
-            lblGameLoadTimeoutValue.Location = new Point(720, yPos);
+            lblGameLoadTimeoutValue.Location = new Point(720, 410);
             lblGameLoadTimeoutValue.Text = "60 s";
 
-            trackGameLoadTimeout.Location = new Point(20, yPos + 25);
+            trackGameLoadTimeout.Location = new Point(20, 435);
             trackGameLoadTimeout.Maximum = 300;
             trackGameLoadTimeout.Minimum = 10;
             trackGameLoadTimeout.Name = "trackGameLoadTimeout";
             trackGameLoadTimeout.Size = new Size(680, 30);
             trackGameLoadTimeout.TabIndex = 18;
             trackGameLoadTimeout.ThumbColor = Color.FromArgb(160, 113, 255);
-            trackGameLoadTimeout.Value = 60;
             trackGameLoadTimeout.ValueChanged += trackGameLoadTimeout_ValueChanged;
+            trackGameLoadTimeout.Value = 60;
 
             // ===== TAB INTERFACE =====
             tabInterface.BackColor = Color.FromArgb(18, 18, 18);
@@ -664,13 +638,11 @@ namespace Injector_UI
             tabSecurity.TabIndex = 3;
             tabSecurity.Text = "Segurança";
 
-            int secY = 20;
-
             chkWarnOnlineMode.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
             chkWarnOnlineMode.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
             chkWarnOnlineMode.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkWarnOnlineMode.ForeColor = Color.White;
-            chkWarnOnlineMode.Location = new Point(20, secY);
+            chkWarnOnlineMode.Location = new Point(20, 20);
             chkWarnOnlineMode.Name = "chkWarnOnlineMode";
             chkWarnOnlineMode.Size = new Size(800, 24);
             chkWarnOnlineMode.TabIndex = 0;
@@ -679,17 +651,15 @@ namespace Injector_UI
 
             lblWarnOnlineDesc.Font = new Font("Segoe UI", 9F);
             lblWarnOnlineDesc.ForeColor = Color.Gray;
-            lblWarnOnlineDesc.Location = new Point(45, secY + 30);
+            lblWarnOnlineDesc.Location = new Point(45, 50);
             lblWarnOnlineDesc.Size = new Size(800, 40);
             lblWarnOnlineDesc.Text = "Exibe um aviso se o jogo estiver em modo online para evitar banimentos.";
-
-            secY += 80;
 
             chkVerifyDllSignatures.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
             chkVerifyDllSignatures.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
             chkVerifyDllSignatures.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkVerifyDllSignatures.ForeColor = Color.White;
-            chkVerifyDllSignatures.Location = new Point(20, secY);
+            chkVerifyDllSignatures.Location = new Point(20, 100);
             chkVerifyDllSignatures.Name = "chkVerifyDllSignatures";
             chkVerifyDllSignatures.Size = new Size(800, 24);
             chkVerifyDllSignatures.TabIndex = 2;
@@ -698,17 +668,15 @@ namespace Injector_UI
 
             lblVerifyDllDesc.Font = new Font("Segoe UI", 9F);
             lblVerifyDllDesc.ForeColor = Color.Gray;
-            lblVerifyDllDesc.Location = new Point(45, secY + 30);
+            lblVerifyDllDesc.Location = new Point(45, 130);
             lblVerifyDllDesc.Size = new Size(800, 40);
             lblVerifyDllDesc.Text = "Verifica se as DLLs possuem assinatura digital válida antes da injeção.";
-
-            secY += 80;
 
             chkSafeMode.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
             chkSafeMode.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
             chkSafeMode.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkSafeMode.ForeColor = Color.White;
-            chkSafeMode.Location = new Point(20, secY);
+            chkSafeMode.Location = new Point(20, 180);
             chkSafeMode.Name = "chkSafeMode";
             chkSafeMode.Size = new Size(800, 24);
             chkSafeMode.TabIndex = 4;
@@ -717,17 +685,15 @@ namespace Injector_UI
 
             lblSafeModeDesc.Font = new Font("Segoe UI", 9F);
             lblSafeModeDesc.ForeColor = Color.Gray;
-            lblSafeModeDesc.Location = new Point(45, secY + 30);
+            lblSafeModeDesc.Location = new Point(45, 210);
             lblSafeModeDesc.Size = new Size(800, 40);
             lblSafeModeDesc.Text = "Executa verificações adicionais de segurança antes da injeção.";
-
-            secY += 80;
 
             chkRequireAdminPrivileges.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
             chkRequireAdminPrivileges.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
             chkRequireAdminPrivileges.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkRequireAdminPrivileges.ForeColor = Color.White;
-            chkRequireAdminPrivileges.Location = new Point(20, secY);
+            chkRequireAdminPrivileges.Location = new Point(20, 260);
             chkRequireAdminPrivileges.Name = "chkRequireAdminPrivileges";
             chkRequireAdminPrivileges.Size = new Size(800, 24);
             chkRequireAdminPrivileges.TabIndex = 6;
@@ -736,17 +702,15 @@ namespace Injector_UI
 
             lblAdminDesc.Font = new Font("Segoe UI", 9F);
             lblAdminDesc.ForeColor = Color.Gray;
-            lblAdminDesc.Location = new Point(45, secY + 30);
+            lblAdminDesc.Location = new Point(45, 290);
             lblAdminDesc.Size = new Size(800, 40);
             lblAdminDesc.Text = "O aplicativo só será executado com privilégios de administrador.";
-
-            secY += 80;
 
             chkScanForMalware.CheckedState.BorderColor = Color.FromArgb(160, 113, 255);
             chkScanForMalware.CheckedState.FillColor = Color.FromArgb(160, 113, 255);
             chkScanForMalware.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             chkScanForMalware.ForeColor = Color.White;
-            chkScanForMalware.Location = new Point(20, secY);
+            chkScanForMalware.Location = new Point(20, 340);
             chkScanForMalware.Name = "chkScanForMalware";
             chkScanForMalware.Size = new Size(800, 24);
             chkScanForMalware.TabIndex = 8;
@@ -755,7 +719,7 @@ namespace Injector_UI
 
             lblMalwareDesc.Font = new Font("Segoe UI", 9F);
             lblMalwareDesc.ForeColor = Color.Gray;
-            lblMalwareDesc.Location = new Point(45, secY + 30);
+            lblMalwareDesc.Location = new Point(45, 370);
             lblMalwareDesc.Size = new Size(800, 40);
             lblMalwareDesc.Text = "Realiza uma verificação básica de malware nas DLLs antes da injeção.";
 
@@ -774,7 +738,6 @@ namespace Injector_UI
             tabCustomDlls.TabIndex = 4;
             tabCustomDlls.Text = "DLLs Customizadas";
 
-            // DataGridView
             dgvCustomDlls.AllowUserToAddRows = false;
             dgvCustomDlls.AllowUserToDeleteRows = false;
             dgvCustomDlls.BackgroundColor = Color.FromArgb(25, 25, 25);
