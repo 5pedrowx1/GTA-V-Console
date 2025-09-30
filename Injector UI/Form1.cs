@@ -8,7 +8,7 @@ namespace Injector_UI
     public partial class Form1 : Form
     {
         private AppConfig config;
-        private CancellationTokenSource cancellationToken;
+        private CancellationTokenSource? cancellationToken;
         private bool isRunning;
         private const int MAX_RETRIES = 3;
 
@@ -440,7 +440,7 @@ namespace Injector_UI
             {
                 if (attempt > 1)
                 {
-                    AppendLog($"[i] Tentativa {attempt}/{maxRetries}...", Color.Cyan);
+                    AppendLog($"[i] Tentativa de injetar {dllName} {attempt}/{maxRetries}...", Color.Cyan);
                     await Task.Delay(config.Injection.RetryDelay);
                 }
 
@@ -455,7 +455,7 @@ namespace Injector_UI
                     }
                     else
                     {
-                        AppendLog($"[⚠] DLL não foi carregada após injeção", Color.Orange);
+                        AppendLog($"[⚠] DLL {dllName} não foi carregada após injeção", Color.Orange);
                     }
                 }
                 else if (result == InjectionResult.AccessDenied)
@@ -684,7 +684,7 @@ namespace Injector_UI
             return false;
         }
 
-        private async Task<bool> CheckScriptHookLogAsync(string logPath)
+        private static async Task<bool> CheckScriptHookLogAsync(string logPath)
         {
             if (!File.Exists(logPath)) return false;
 
@@ -695,10 +695,10 @@ namespace Injector_UI
 
                 foreach (var line in recentLines)
                 {
-                    if (line.IndexOf("INIT: Pool", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        line.IndexOf("INIT: Game", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        line.IndexOf("Started", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        line.IndexOf("Initialization", StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (line.Contains("INIT: Pool", StringComparison.OrdinalIgnoreCase) ||
+                        line.Contains("INIT: Game", StringComparison.OrdinalIgnoreCase) ||
+                        line.Contains("Started", StringComparison.OrdinalIgnoreCase) ||
+                        line.Contains("Initialization", StringComparison.OrdinalIgnoreCase))
                     {
                         return true;
                     }
@@ -824,14 +824,14 @@ namespace Injector_UI
                 return;
             }
 
-            var lines = txtOut.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+            var lines = txtOut.Text.Split([Environment.NewLine], StringSplitOptions.None).ToList();
             if (lines.Count > 0)
             {
                 var timestamp = config.Interface.ShowTimestamps
                     ? $"[{DateTime.Now:HH:mm:ss}] "
                     : "";
 
-                lines[lines.Count - 2] = timestamp + message;
+                lines[^2] = timestamp + message;
                 txtOut.Text = string.Join(Environment.NewLine, lines);
                 txtOut.SelectionStart = txtOut.Text.Length;
                 txtOut.ScrollToCaret();
