@@ -1,5 +1,6 @@
 ﻿using Guna.UI2.WinForms;
 using Injector_UI.Injector_UI;
+using System.Security.AccessControl;
 
 namespace Injector_UI
 {
@@ -15,6 +16,13 @@ namespace Injector_UI
             originalConfig = appConfig;
             config = CloneConfig(appConfig);
 
+            if (config == null)
+            {
+                MessageBox.Show("Erro ao carregar configurações. Usando padrões.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                config = new AppConfig();
+            }
+
             InitializeComponent();
             LoadSettings();
         }
@@ -22,14 +30,104 @@ namespace Injector_UI
         // Load Settings
         private void LoadSettings()
         {
+            // Carregar valores da config nos controles
+            LoadGeneralSettings();
+            LoadInjectionSettings();
+            LoadInterfaceSettings();
+            LoadSecuritySettings();
             LoadCustomDllsGrid();
             RefreshProfilesComboBox();
             LoadProfileSettings();
         }
 
+        private void LoadGeneralSettings()
+        {
+            config.General ??= new GeneralSettings();
+
+            txtProcessName.Text = config.General.ProcessName ?? "GTA5";
+            chkAutoInject.Checked = config.General.AutoInject;
+            chkStartMinimized.Checked = config.General.StartMinimized;
+            chkMinimizeToTray.Checked = config.General.MinimizeToTray;
+            chkCloseToTray.Checked = config.General.CloseToTray;
+            chkRunOnStartup.Checked = config.General.RunOnStartup;
+            chkCheckForUpdates.Checked = config.General.CheckForUpdates;
+            chkSaveLogs.Checked = config.General.SaveLogs;
+            txtLogDirectory.Text = config.General.LogDirectory ?? "Logs";
+        }
+
+        private void LoadInjectionSettings()
+        {
+            if (config.Injection == null)
+            {
+                config.Injection = new InjectionSettings();
+            }
+
+            trackProcessCheckInterval.Value = Math.Clamp(config.Injection.ProcessCheckInterval, 500, 10000);
+            lblProcessCheckValue.Text = $"{config.Injection.ProcessCheckInterval}ms";
+
+            trackInitTimeout.Value = Math.Clamp(config.Injection.InitializationTimeout, 5000, 60000);
+            lblInitTimeoutValue.Text = $"{config.Injection.InitializationTimeout}ms";
+
+            trackInjectionTimeout.Value = Math.Clamp(config.Injection.InjectionTimeout, 5000, 30000);
+            lblInjectionTimeoutValue.Text = $"{config.Injection.InjectionTimeout}ms";
+
+            trackMaxRetries.Value = Math.Clamp(config.Injection.MaxRetries, 1, 10);
+            lblMaxRetriesValue.Text = config.Injection.MaxRetries.ToString();
+
+            trackRetryDelay.Value = Math.Clamp(config.Injection.RetryDelay, 500, 10000);
+            lblRetryDelayValue.Text = $"{config.Injection.RetryDelay}ms";
+
+            chkWaitForGameLoad.Checked = config.Injection.WaitForGameLoad;
+
+            trackGameLoadTimeout.Value = Math.Clamp(config.Injection.GameLoadTimeout, 10, 300);
+            lblGameLoadTimeoutValue.Text = $"{config.Injection.GameLoadTimeout}s";
+
+            trackPostInjectionDelay.Value = Math.Clamp(config.Injection.PostInjectionDelay, 0, 10000);
+            lblPostInjectionDelayValue.Text = $"{config.Injection.PostInjectionDelay}ms";
+        }
+
+        private void LoadInterfaceSettings()
+        {
+            if (config.Interface == null)
+            {
+                config.Interface = new InterfaceSettings();
+            }
+
+            cmbTheme.SelectedItem = config.Interface.Theme ?? "Dark";
+            cmbAccentColor.SelectedItem = config.Interface.AccentColor ?? "Purple";
+            chkShowDetailedLogs.Checked = config.Interface.ShowDetailedLogs;
+            chkShowTimestamps.Checked = config.Interface.ShowTimestamps;
+            trackFontSize.Value = Math.Clamp(config.Interface.FontSize, trackFontSize.Minimum, trackFontSize.Maximum);
+            lblFontSizeValue.Text = $"{config.Interface.FontSize}pt";
+            chkAlwaysOnTop.Checked = config.Interface.AlwaysOnTop;
+            chkShowTrayNotifications.Checked = config.Interface.ShowTrayNotifications;
+        }
+
+        private void LoadSecuritySettings()
+        {
+            if (config.Security == null)
+            {
+                config.Security = new SecuritySettings();
+            }
+
+            chkWarnOnlineMode.Checked = config.Security.WarnOnlineMode;
+            chkVerifyDllSignatures.Checked = config.Security.VerifyDllSignatures;
+            chkSafeMode.Checked = config.Security.SafeMode;
+            chkRequireAdminPrivileges.Checked = config.Security.RequireAdminPrivileges;
+            chkScanForMalware.Checked = config.Security.ScanForMalware;
+        }
+
         private void LoadCustomDllsGrid()
         {
             dgvCustomDlls.Rows.Clear();
+
+            // Verificar se CustomDlls não é nulo
+            if (config.CustomDlls == null)
+            {
+                config.CustomDlls = new List<CustomDllConfig>();
+                return;
+            }
+
             foreach (var dll in config.CustomDlls.OrderBy(d => d.Priority))
             {
                 dgvCustomDlls.Rows.Add(
@@ -47,6 +145,23 @@ namespace Injector_UI
             if (cmbProfiles.SelectedItem == null) return;
 
             var profileName = cmbProfiles.SelectedItem.ToString();
+
+            // Verificar se Profiles não é nulo
+            if (config.Profiles == null)
+            {
+                config.Profiles = new Dictionary<string, ProfileConfig>();
+                config.Profiles["Default"] = new ProfileConfig
+                {
+                    Name = "Default",
+                    Description = "Perfil padrão",
+                    InjectScriptHook = true,
+                    InjectDotNet = true,
+                    CustomDllsEnabled = false
+                };
+                RefreshProfilesComboBox();
+                return;
+            }
+
             if (config.Profiles.TryGetValue(profileName, out var profile))
             {
                 txtProfileName.Text = profile.Name;
@@ -156,8 +271,6 @@ namespace Injector_UI
             if (result == DialogResult.Yes)
             {
                 config = new AppConfig();
-
-                // Reload all tabs
                 LoadSettings();
 
                 MessageBox.Show("Configurações restauradas para o padrão!", "Sucesso",
@@ -261,6 +374,12 @@ namespace Injector_UI
                 LoadCustomDllsGrid();
                 dgvCustomDlls.Rows[index + 1].Selected = true;
             }
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        { 
+            this.DialogResult = DialogResult.Cancel; 
+            this.Close(); 
         }
 
         // Profile Events
@@ -368,17 +487,125 @@ namespace Injector_UI
 
         private void RefreshProfilesComboBox()
         {
+            // Verificar se Profiles não é nulo
+            if (config.Profiles == null)
+            {
+                config.Profiles = new Dictionary<string, ProfileConfig>();
+                config.Profiles["Default"] = new ProfileConfig
+                {
+                    Name = "Default",
+                    Description = "Perfil padrão",
+                    InjectScriptHook = true,
+                    InjectDotNet = true,
+                    CustomDllsEnabled = false
+                };
+                config.ActiveProfile = "Default";
+            }
+
             var selectedProfile = cmbProfiles.SelectedItem?.ToString() ?? config.ActiveProfile;
             cmbProfiles.Items.Clear();
             cmbProfiles.Items.AddRange(config.Profiles.Keys.ToArray());
-            cmbProfiles.SelectedItem = selectedProfile;
+
+            if (cmbProfiles.Items.Contains(selectedProfile))
+            {
+                cmbProfiles.SelectedItem = selectedProfile;
+            }
+            else if (cmbProfiles.Items.Count > 0)
+            {
+                cmbProfiles.SelectedIndex = 0;
+            }
         }
 
-        // Utility
+        // Utility Methods
         private AppConfig CloneConfig(AppConfig source)
         {
-            var json = System.Text.Json.JsonSerializer.Serialize(source);
-            return System.Text.Json.JsonSerializer.Deserialize<AppConfig>(json) ?? new AppConfig();
+            try
+            {
+                var json = System.Text.Json.JsonSerializer.Serialize(source);
+                var cloned = System.Text.Json.JsonSerializer.Deserialize<AppConfig>(json);
+
+                // Garantir que as listas não sejam nulas após desserialização
+                if (cloned != null)
+                {
+                    // Garantir que todas as seções estejam inicializadas
+                    cloned.General ??= new GeneralSettings();
+                    cloned.Injection ??= new InjectionSettings();
+                    cloned.Interface ??= new InterfaceSettings();
+                    cloned.Security ??= new SecuritySettings();
+                    cloned.CustomDlls ??= new List<CustomDllConfig>();
+                    cloned.Profiles ??= new Dictionary<string, ProfileConfig>();
+
+                    // Se não houver perfis, criar o Default
+                    if (cloned.Profiles.Count == 0)
+                    {
+                        cloned.Profiles["Default"] = new ProfileConfig
+                        {
+                            Name = "Default",
+                            Description = "Perfil padrão",
+                            InjectScriptHook = true,
+                            InjectDotNet = true,
+                            CustomDllsEnabled = false,
+                            EnabledCustomDlls = new List<string>()
+                        };
+                        cloned.ActiveProfile = "Default";
+                    }
+
+                    return cloned;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao clonar configuração: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            // Se falhar, retornar uma nova config
+            return new AppConfig();
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void TrackFontSize_ValueChanged(object sender, EventArgs e)
+        {
+            lblFontSizeValue.Text = $"{trackFontSize.Value}pt";
+        }
+
+        private void trackProcessCheckInterval_ValueChanged(object sender, EventArgs e)
+        {
+            lblProcessCheckValue.Text = $"{trackProcessCheckInterval.Value}ms";
+        }
+
+        private void trackInitTimeout_ValueChanged(object sender, EventArgs e)
+        {
+            lblInitTimeoutValue.Text = $"{trackInitTimeout.Value}ms";
+        }
+
+        private void trackInjectionTimeout_ValueChanged(object sender, EventArgs e)
+        {
+            lblInjectionTimeoutValue.Text = $"{trackInjectionTimeout.Value}ms";
+        }
+
+        private void trackMaxRetries_ValueChanged(object sender, EventArgs e)
+        {
+            lblMaxRetriesValue.Text = trackMaxRetries.Value.ToString();
+        }
+
+        private void trackRetryDelay_ValueChanged(object sender, EventArgs e)
+        {
+            lblRetryDelayValue.Text = $"{trackRetryDelay.Value}ms";
+        }
+
+        private void trackGameLoadTimeout_ValueChanged(object sender, EventArgs e)
+        {
+            lblGameLoadTimeoutValue.Text = $"{trackGameLoadTimeout.Value}s";
+        }
+
+        private void trackPostInjectionDelay_ValueChanged(object sender, EventArgs e)
+        {
+            lblPostInjectionDelayValue.Text = $"{trackPostInjectionDelay.Value}ms";
         }
     }
 }
