@@ -48,6 +48,7 @@ namespace Injector_UI
             btnCancel = new Guna2GradientButton();
             btnOk = new Guna2GradientButton();
             guna2DragControl1 = new Guna2DragControl(components);
+            guna2Elipse1 = new Guna2Elipse(components);
             panelTop.SuspendLayout();
             SuspendLayout();
             // 
@@ -148,6 +149,11 @@ namespace Injector_UI
             guna2DragControl1.DockIndicatorTransparencyValue = 0.6D;
             guna2DragControl1.UseTransparentDrag = true;
             // 
+            // guna2Elipse1
+            // 
+            guna2Elipse1.BorderRadius = 17;
+            guna2Elipse1.TargetControl = this;
+            // 
             // InputForm
             // 
             BackColor = Color.FromArgb(18, 18, 18);
@@ -179,5 +185,6 @@ namespace Injector_UI
         private Label lblPrompt;
         private Guna2Separator separator;
         private Guna2DragControl guna2DragControl1;
+        private Guna2Elipse guna2Elipse1;
     }
 }

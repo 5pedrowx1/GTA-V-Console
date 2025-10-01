@@ -53,6 +53,7 @@
             btnSettings = new Guna.UI2.WinForms.Guna2GradientButton();
             btnClearLog = new Guna.UI2.WinForms.Guna2GradientButton();
             guna2Separator1 = new Guna.UI2.WinForms.Guna2Separator();
+            guna2Elipse1 = new Guna.UI2.WinForms.Guna2Elipse(components);
             panelTop.SuspendLayout();
             panelStatus.SuspendLayout();
             panelControls.SuspendLayout();
@@ -310,6 +311,11 @@
             guna2Separator1.Size = new Size(770, 10);
             guna2Separator1.TabIndex = 8;
             // 
+            // guna2Elipse1
+            // 
+            guna2Elipse1.BorderRadius = 17;
+            guna2Elipse1.TargetControl = this;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -353,5 +359,6 @@
         private Guna.UI2.WinForms.Guna2GradientButton btnClearLog;
         private Guna.UI2.WinForms.Guna2Separator guna2Separator1;
         private Guna.UI2.WinForms.Guna2GradientButton BtnInject;
+        private Guna.UI2.WinForms.Guna2Elipse guna2Elipse1;
     }
 }

@@ -10,7 +10,7 @@ namespace Injector_UI.Core
         private readonly AppConfig _config;
         private readonly ILogger _logger;
         public const string CURRENT_VERSION = "2.0.2";
-        private const string VERSION_URL = "https://raw.githubusercontent.com/5pedrowx1/GTA-V-Console/master/version.json";
+        private const string VERSION_URL = "https://raw.githubusercontent.com/5pedrowx1/GTA-V-Console/refs/heads/master/version.json";
 
         public UpdateChecker(AppConfig config, ILogger logger)
         {

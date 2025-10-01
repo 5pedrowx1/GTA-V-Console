@@ -18,7 +18,6 @@ namespace Injector_UI
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -157,6 +156,7 @@ namespace Injector_UI
             btnApply = new Guna2GradientButton();
             btnRestoreDefaults = new Guna2GradientButton();
             guna2DragControl1 = new Guna2DragControl(components);
+            guna2Elipse1 = new Guna2Elipse(components);
             panelTop.SuspendLayout();
             tabControl.SuspendLayout();
             tabGeneral.SuspendLayout();
@@ -1494,9 +1494,13 @@ namespace Injector_UI
             guna2DragControl1.TargetControl = panelTop;
             guna2DragControl1.UseTransparentDrag = true;
             // 
+            // guna2Elipse1
+            // 
+            guna2Elipse1.BorderRadius = 17;
+            guna2Elipse1.TargetControl = this;
+            // 
             // SettingsForm
             // 
-            Icon = (Icon)resources.GetObject("$this.Icon");
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(18, 18, 18);
@@ -1622,5 +1626,6 @@ namespace Injector_UI
         private FlowLayoutPanel profileHeaderPanel;
         private FlowLayoutPanel profileFlow;
         private Guna2DragControl guna2DragControl1;
+        private Guna2Elipse guna2Elipse1;
     }
 }
