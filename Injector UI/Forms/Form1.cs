@@ -1,7 +1,5 @@
 ﻿using Injector_UI.Core;
 using Injector_UI.Injector_UI;
-using System.Diagnostics;
-using System.Security.Principal;
 
 namespace Injector_UI
 {
@@ -57,7 +55,7 @@ namespace Injector_UI
             txtOut.Font = new Font(txtOut.Font.FontFamily, _config.Interface.FontSize);
 
             // Configurar versão
-            lblVersion.Text = "v2.0.0";
+            lblVersion.Text = UpdateChecker.CURRENT_VERSION;
 
             // Aplicar tema
             ApplyTheme(_config.Interface.Theme, _config.Interface.AccentColor);
