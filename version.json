@@ -1,0 +1,5 @@
+{
+  "version": "2.0.2",
+  "updateUrl": "https://exemplo.com/update.zip",
+  "changelog": "- Fix bug X\n- Nova feature Y"
+}
