@@ -5,7 +5,7 @@ namespace Mod_With_Guna
 {
     public partial class MainForm : Form
     {
-        // Instâncias das classes de lógica
+        // Instâncias das classes de lógica (recebidas do GTAVConsole)
         private readonly PlayerLogic playerLogic;
         private readonly VehicleLogic vehicleLogic;
         private readonly WeaponLogic weaponLogic;
@@ -14,20 +14,32 @@ namespace Mod_With_Guna
         private readonly FunLogic funLogic;
         private readonly TeleportLogic teleportLogic;
         private readonly SpawnerLogic spawnerLogic;
+        private readonly MoneyLogic moneyLogic;
 
-        public MainForm()
+        // Construtor modificado para receber as instâncias
+        public MainForm(
+            PlayerLogic playerLogic,
+            VehicleLogic vehicleLogic,
+            WeaponLogic weaponLogic,
+            WorldLogic worldLogic,
+            ChaosLogic chaosLogic,
+            FunLogic funLogic,
+            TeleportLogic teleportLogic,
+            SpawnerLogic spawnerLogic,
+            MoneyLogic moneyLogic)
         {
             InitializeComponent();
 
-            // Inicializar as classes de lógica
-            playerLogic = new PlayerLogic();
-            vehicleLogic = new VehicleLogic();
-            weaponLogic = new WeaponLogic();
-            worldLogic = new WorldLogic();
-            chaosLogic = new ChaosLogic();
-            funLogic = new FunLogic();
-            teleportLogic = new TeleportLogic();
-            spawnerLogic = new SpawnerLogic();
+            // Atribuir as instâncias recebidas
+            this.playerLogic = playerLogic;
+            this.vehicleLogic = vehicleLogic;
+            this.weaponLogic = weaponLogic;
+            this.worldLogic = worldLogic;
+            this.chaosLogic = chaosLogic;
+            this.funLogic = funLogic;
+            this.teleportLogic = teleportLogic;
+            this.spawnerLogic = spawnerLogic;
+            this.moneyLogic = moneyLogic;
 
             // Registrar eventos
             RegisterEvents();
@@ -96,11 +108,49 @@ namespace Mod_With_Guna
             // Eventos da aba SPAWNER
             btnSpawnVeiculo.Click += (s, e) => spawnerLogic.SpawnVehicle(txtSpawnModel.Text);
             btnSpawnPed.Click += (s, e) => spawnerLogic.SpawnPed(txtSpawnModel.Text);
+
+            // Eventos da aba DINHEIRO
+            btnAddDinheiro.Click += (s, e) => {
+                if (int.TryParse(txtValorDinheiro.Text, out int valor))
+                {
+                    moneyLogic.AddMoney(valor);
+                    AtualizarDinheiro();
+                }
+            };
+
+            btnSetDinheiro.Click += (s, e) => {
+                if (int.TryParse(txtValorDinheiro.Text, out int valor))
+                {
+                    moneyLogic.SetMoney(valor);
+                    AtualizarDinheiro();
+                }
+            };
+
+            btnAdd10k.Click += (s, e) => {
+                moneyLogic.AddMoney(10000);
+                AtualizarDinheiro();
+            };
+
+            btnAdd100k.Click += (s, e) => {
+                moneyLogic.AddMoney(100000);
+                AtualizarDinheiro();
+            };
+
+            btnAdd1M.Click += (s, e) => {
+                moneyLogic.AddMoney(1000000);
+                AtualizarDinheiro();
+            };
+        }
+
+        private void AtualizarDinheiro()
+        {
+            int dinheiro = moneyLogic.GetCurrentMoney();
+            lblValorDinheiro.Text = $"${dinheiro:N0}";
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Visible = false; // Só esconde, não fecha o jogo
         }
 
         private void BtnMinimize_Click(object sender, EventArgs e)

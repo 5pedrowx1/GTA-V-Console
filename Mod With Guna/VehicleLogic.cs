@@ -1,83 +1,163 @@
 ﻿using GTA;
+using GTA.Math;
 using GTA.Native;
 using GTA.UI;
+using System;
 
 namespace Mod_With_Guna
 {
     public class VehicleLogic
     {
         private bool invincibleVehicleActive = false;
+        private Vehicle trackedVehicle = null;
+
+        private bool shouldRepair = false;
+        private bool shouldToggleInvincible = false;
+        private bool invincibleTargetState = false;
 
         public void ToggleInvincibleVehicle(bool enabled)
         {
-            invincibleVehicleActive = enabled;
-
-            if (Game.Player.Character.IsInVehicle())
-            {
-                Vehicle vehicle = Game.Player.Character.CurrentVehicle;
-
-                if (enabled)
-                {
-                    vehicle.IsInvincible = true;
-                    Function.Call(Hash.SET_ENTITY_INVINCIBLE, vehicle, true);
-                    Function.Call(Hash.SET_ENTITY_PROOFS, vehicle, true, true, true, true, true, true, true, true);
-                    Notification.Show("~g~Veículo Indestrutível Ativado");
-                }
-                else
-                {
-                    vehicle.IsInvincible = false;
-                    Function.Call(Hash.SET_ENTITY_INVINCIBLE, vehicle, false);
-                    Function.Call(Hash.SET_ENTITY_PROOFS, vehicle, false, false, false, false, false, false, false, false);
-                    Notification.Show("~r~Veículo Indestrutível Desativado");
-                }
-            }
-            else
-            {
-                Notification.Show("~r~Você precisa estar em um veículo!");
-            }
+            shouldToggleInvincible = true;
+            invincibleTargetState = enabled;
         }
 
         public void RepairVehicle()
         {
-            if (Game.Player.Character.IsInVehicle())
-            {
-                Vehicle vehicle = Game.Player.Character.CurrentVehicle;
-                vehicle.Repair();
-                vehicle.DirtLevel = 0f;
-                vehicle.PetrolTankHealth = 1000f;
-                Notification.Show("~g~Veículo Reparado com Sucesso");
-            }
-            else
-            {
-                Notification.Show("~r~Você precisa estar em um veículo!");
-            }
+            shouldRepair = true;
         }
 
         public void SetMaxSpeed(int speedMultiplier)
         {
-            if (Game.Player.Character.IsInVehicle())
+            if (!Game.Player.Character.IsInVehicle())
             {
-                Vehicle vehicle = Game.Player.Character.CurrentVehicle;
-                float multiplier = speedMultiplier / 100f;
+                return;
+            }
 
-                // Modificar a velocidade máxima do veículo
-                float baseSpeed = 50f; // Velocidade base padrão
+            Vehicle vehicle = Game.Player.Character.CurrentVehicle;
+
+            if (vehicle == null || !vehicle.Exists())
+            {
+                return;
+            }
+
+            speedMultiplier = Math.Max(10, Math.Min(500, speedMultiplier));
+            float multiplier = speedMultiplier / 100f;
+
+            try
+            {
+                float baseSpeed = 50f;
                 vehicle.MaxSpeed = baseSpeed * multiplier;
-
-                // Também podemos usar o modificador de velocidade nativo
-                Function.Call((Hash)0x93A3996368C94158, vehicle, multiplier); // _SET_VEHICLE_ENGINE_POWER_MULTIPLIER
+                Function.Call((Hash)0x93A3996368C94158, vehicle.Handle, multiplier);
+            }
+            catch
+            {
+                // Ignora erros
             }
         }
 
+
         public void Update()
         {
-            if (invincibleVehicleActive && Game.Player.Character.IsInVehicle())
+            try
             {
-                Vehicle vehicle = Game.Player.Character.CurrentVehicle;
-                vehicle.Health = vehicle.MaxHealth;
-                vehicle.BodyHealth = 1000f;
-                vehicle.EngineHealth = 1000f;
+                // Processa toggle de invencibilidade
+                if (shouldToggleInvincible)
+                {
+                    shouldToggleInvincible = false;
+                    ProcessToggleInvincible(invincibleTargetState);
+                }
+
+                // Processa reparo
+                if (shouldRepair)
+                {
+                    shouldRepair = false;
+                    ProcessRepair();
+                }
+
+                // Mantém veículo invencível
+                if (invincibleVehicleActive && trackedVehicle != null && trackedVehicle.Exists())
+                {
+                    if (Game.Player.Character.IsInVehicle() &&
+                        Game.Player.Character.CurrentVehicle == trackedVehicle)
+                    {
+                        trackedVehicle.Health = trackedVehicle.MaxHealth;
+                        trackedVehicle.BodyHealth = 1000f;
+                        trackedVehicle.EngineHealth = 1000f;
+                    }
+                    else
+                    {
+                        invincibleVehicleActive = false;
+                        trackedVehicle = null;
+                    }
+                }
             }
+            catch
+            {
+                invincibleVehicleActive = false;
+                trackedVehicle = null;
+            }
+        }
+
+
+        private void ProcessToggleInvincible(bool enabled)
+        {
+            if (!Game.Player.Character.IsInVehicle())
+            {
+                Notification.PostTicker("~r~Você precisa estar em um veículo!", true);
+                invincibleVehicleActive = false;
+                return;
+            }
+
+            Vehicle vehicle = Game.Player.Character.CurrentVehicle;
+
+            if (vehicle == null || !vehicle.Exists())
+            {
+                Notification.PostTicker("~r~Veículo inválido!", true);
+                invincibleVehicleActive = false;
+                return;
+            }
+
+            invincibleVehicleActive = enabled;
+
+            if (enabled)
+            {
+                trackedVehicle = vehicle;
+                vehicle.IsInvincible = true;
+                Function.Call(Hash.SET_ENTITY_INVINCIBLE, vehicle.Handle, true);
+                Function.Call(Hash.SET_ENTITY_PROOFS, vehicle.Handle, true, true, true, true, true, true, true, true);
+                Notification.PostTicker("~g~Veículo Indestrutível Ativado", true);
+            }
+            else
+            {
+                trackedVehicle = null;
+                vehicle.IsInvincible = false;
+                Function.Call(Hash.SET_ENTITY_INVINCIBLE, vehicle.Handle, false);
+                Function.Call(Hash.SET_ENTITY_PROOFS, vehicle.Handle, false, false, false, false, false, false, false, false);
+                Notification.PostTicker("~r~Veículo Indestrutível Desativado", true);
+            }
+        }
+
+
+        private void ProcessRepair()
+        {
+            if (!Game.Player.Character.IsInVehicle())
+            {
+                Notification.PostTicker("~r~Você precisa estar em um veículo!", true);
+                return;
+            }
+
+            Vehicle vehicle = Game.Player.Character.CurrentVehicle;
+
+            if (vehicle == null || !vehicle.Exists())
+            {
+                Notification.PostTicker("~r~Veículo inválido!", true);
+                return;
+            }
+
+            vehicle.Repair();
+            vehicle.DirtLevel = 0f;
+            vehicle.PetrolTankHealth = 1000f;
+            Notification.PostTicker("~g~Veículo Reparado com Sucesso", true);
         }
     }
 }

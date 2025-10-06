@@ -27,11 +27,11 @@ namespace Mod_With_Guna
             if (enabled)
             {
                 currentHour = World.CurrentTimeOfDay.Hours;
-                Notification.Show("~g~Tempo Congelado");
+                Notification.PostTicker("~g~Tempo Congelado", true);
             }
             else
             {
-                Notification.Show("~r~Tempo Descongelado");
+                Notification.PostTicker("~r~Tempo Descongelado", true);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Mod_With_Guna
             if (weatherIndex >= 0 && weatherIndex < weatherTypes.Length)
             {
                 Function.Call(Hash.SET_WEATHER_TYPE_NOW_PERSIST, weatherTypes[weatherIndex]);
-                Notification.Show($"~g~Clima Alterado");
+                Notification.PostTicker($"~g~Clima Alterado", true);
             }
         }
 

@@ -16,12 +16,12 @@ namespace Mod_With_Guna
             if (moonGravityActive)
             {
                 Function.Call(Hash.SET_GRAVITY_LEVEL, 0); // 0 = gravidade da lua
-                Notification.Show("~b~Gravidade da Lua Ativada!");
+                Notification.PostTicker("~b~Gravidade da Lua Ativada!", true);
             }
             else
             {
                 Function.Call(Hash.SET_GRAVITY_LEVEL, 1); // 1 = gravidade normal
-                Notification.Show("~g~Gravidade Normal Restaurada");
+                Notification.PostTicker("~g~Gravidade Normal Restaurada", true);
             }
         }
 
@@ -32,12 +32,12 @@ namespace Mod_With_Guna
             if (slowMotionActive)
             {
                 Game.TimeScale = 0.5f; // Metade da velocidade normal
-                Notification.Show("~b~Câmera Lenta Ativada!");
+                Notification.PostTicker("~b~Câmera Lenta Ativada!", true);
             }
             else
             {
                 Game.TimeScale = 1.0f; // Velocidade normal
-                Notification.Show("~g~Velocidade Normal Restaurada");
+                Notification.PostTicker("~g~Velocidade Normal Restaurada", true);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Mod_With_Guna
             if (Game.Player.Character.IsAlive)
             {
                 Game.Player.Character.Ragdoll(5000); // 5 segundos de ragdoll
-                Notification.Show("~y~Modo Ragdoll Ativado!");
+                Notification.PostTicker("~y~Modo Ragdoll Ativado!", true);
             }
         }
 

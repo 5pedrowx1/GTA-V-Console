@@ -17,12 +17,12 @@ namespace Mod_With_Guna
             if (enabled)
             {
                 Function.Call(Hash.SET_RIOT_MODE_ENABLED, true);
-                Notification.Show("~r~Peds Agressivos Ativado - CUIDADO!");
+                Notification.PostTicker("~r~Peds Agressivos Ativado - CUIDADO!", true);
             }
             else
             {
                 Function.Call(Hash.SET_RIOT_MODE_ENABLED, false);
-                Notification.Show("~g~Peds Agressivos Desativado");
+                Notification.PostTicker("~g~Peds Agressivos Desativado", true);
             }
         }
 
@@ -40,7 +40,7 @@ namespace Mod_With_Guna
                 }
             }
 
-            Notification.Show($"~r~{count} veículos explodidos!");
+            Notification.PostTicker($"~r~{count} veículos explodidos!", true);
         }
 
         public void ToggleTotalChaos()
@@ -77,13 +77,13 @@ namespace Mod_With_Guna
                     }
                 }
 
-                Notification.Show("~r~MODO CHAOS TOTAL ATIVADO!");
+                Notification.PostTicker("~r~MODO CHAOS TOTAL ATIVADO!", true);
             }
             else
             {
                 Function.Call(Hash.SET_RIOT_MODE_ENABLED, false);
                 Function.Call(Hash.SET_CREATE_RANDOM_COPS, true);
-                Notification.Show("~g~Modo Chaos Total Desativado");
+                Notification.PostTicker("~g~Modo Chaos Total Desativado", true);
             }
         }
 

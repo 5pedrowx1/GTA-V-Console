@@ -16,12 +16,12 @@ namespace Mod_With_Guna
             if (enabled)
             {
                 Function.Call(Hash.SET_PED_INFINITE_AMMO_CLIP, Game.Player.Character, true);
-                Notification.Show("~g~Munição Infinita Ativada");
+                Notification.PostTicker("~g~Munição Infinita Ativada", true);
             }
             else
             {
                 Function.Call(Hash.SET_PED_INFINITE_AMMO_CLIP, Game.Player.Character, false);
-                Notification.Show("~r~Munição Infinita Desativada");
+                Notification.PostTicker("~r~Munição Infinita Desativada", true);
             }
         }
 
@@ -31,11 +31,11 @@ namespace Mod_With_Guna
 
             if (enabled)
             {
-                Notification.Show("~g~Sem Recarga Ativado");
+                Notification.PostTicker("~g~Sem Recarga Ativado", true);
             }
             else
             {
-                Notification.Show("~r~Sem Recarga Desativado");
+                Notification.PostTicker("~r~Sem Recarga Desativado", true);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Mod_With_Guna
                 Game.Player.Character.Weapons.Give(weapon, 9999, true, false);
             }
 
-            Notification.Show("~g~Todas as Armas Adicionadas!");
+            Notification.PostTicker("~g~Todas as Armas Adicionadas!", true);
         }
 
         public void Update()

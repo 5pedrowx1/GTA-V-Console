@@ -17,13 +17,13 @@ namespace Mod_With_Guna
             {
                 Function.Call(Hash.SET_PLAYER_INVINCIBLE, Game.Player, true);
                 Game.Player.Character.IsInvincible = true;
-                Notification.Show("~g~God Mode Ativado");
+                Notification.PostTicker("~g~God Mode Ativado", true);
             }
             else
             {
                 Function.Call(Hash.SET_PLAYER_INVINCIBLE, Game.Player, false);
                 Game.Player.Character.IsInvincible = false;
-                Notification.Show("~r~God Mode Desativado");
+                Notification.PostTicker("~r~God Mode Desativado", true);
             }
         }
 
@@ -34,11 +34,11 @@ namespace Mod_With_Guna
             if (enabled)
             {
                 Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
-                Notification.Show("~g~Stamina Infinita Ativada");
+                Notification.PostTicker("~g~Stamina Infinita Ativada", true);
             }
             else
             {
-                Notification.Show("~r~Stamina Infinita Desativada");
+                Notification.PostTicker("~r~Stamina Infinita Desativada", true);
             }
         }
 
@@ -54,7 +54,7 @@ namespace Mod_With_Guna
         {
             Game.Player.Character.Health = Game.Player.Character.MaxHealth;
             Game.Player.Character.Armor = 100;
-            Notification.Show("~g~Jogador Curado Completamente");
+            Notification.PostTicker("~g~Jogador Curado Completamente", true);
         }
 
         public void Update()

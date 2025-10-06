@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.DragControl = new Guna.UI2.WinForms.Guna2DragControl(this.components);
-            this.Elipse = new Guna.UI2.WinForms.Guna2Elipse(this.components);
             this.PanelTop = new Guna.UI2.WinForms.Guna2Panel();
             this.btnMinimize = new Guna.UI2.WinForms.Guna2Button();
             this.btnClose = new Guna.UI2.WinForms.Guna2Button();
             this.guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.Elipse = new Guna.UI2.WinForms.Guna2Elipse(this.components);
             this.TabControl = new Guna.UI2.WinForms.Guna2TabControl();
             this.Chaos = new System.Windows.Forms.TabPage();
             this.btnExplosaoVeiculos = new Guna.UI2.WinForms.Guna2Button();
@@ -42,19 +42,19 @@
             this.togglePedsCrazy = new Guna.UI2.WinForms.Guna2ToggleSwitch();
             this.lblPedsCrazy = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.Player = new System.Windows.Forms.TabPage();
+            this.btnCurarPlayer = new Guna.UI2.WinForms.Guna2Button();
             this.trackBarVida = new Guna.UI2.WinForms.Guna2TrackBar();
             this.lblVida = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.toggleGodMode = new Guna.UI2.WinForms.Guna2ToggleSwitch();
             this.lblGodMode = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.toggleInfiniteStamina = new Guna.UI2.WinForms.Guna2ToggleSwitch();
             this.lblStamina = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.btnCurarPlayer = new Guna.UI2.WinForms.Guna2Button();
             this.Veiculos = new System.Windows.Forms.TabPage();
+            this.trackBarVelocidade = new Guna.UI2.WinForms.Guna2TrackBar();
+            this.lblVelocidade = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnRepararVeiculo = new Guna.UI2.WinForms.Guna2Button();
             this.toggleVeiculoIndestrutivel = new Guna.UI2.WinForms.Guna2ToggleSwitch();
             this.lblVeiculoIndestrutivel = new Guna.UI2.WinForms.Guna2HtmlLabel();
-            this.trackBarVelocidade = new Guna.UI2.WinForms.Guna2TrackBar();
-            this.lblVelocidade = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.Armas = new System.Windows.Forms.TabPage();
             this.btnTodasArmas = new Guna.UI2.WinForms.Guna2Button();
             this.toggleMunicaoInfinita = new Guna.UI2.WinForms.Guna2ToggleSwitch();
@@ -82,6 +82,16 @@
             this.lblSpawnModel = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.btnSpawnVeiculo = new Guna.UI2.WinForms.Guna2Button();
             this.btnSpawnPed = new Guna.UI2.WinForms.Guna2Button();
+            this.Dinheiro = new System.Windows.Forms.TabPage();
+            this.btnAdd1M = new Guna.UI2.WinForms.Guna2Button();
+            this.btnAdd100k = new Guna.UI2.WinForms.Guna2Button();
+            this.btnAdd10k = new Guna.UI2.WinForms.Guna2Button();
+            this.btnSetDinheiro = new Guna.UI2.WinForms.Guna2Button();
+            this.btnAddDinheiro = new Guna.UI2.WinForms.Guna2Button();
+            this.txtValorDinheiro = new Guna.UI2.WinForms.Guna2TextBox();
+            this.lblValorInput = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.lblValorDinheiro = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            this.lblDinheiroAtual = new Guna.UI2.WinForms.Guna2HtmlLabel();
             this.ShadowForm = new Guna.UI2.WinForms.Guna2ShadowForm(this.components);
             this.PanelTop.SuspendLayout();
             this.TabControl.SuspendLayout();
@@ -93,6 +103,7 @@
             this.Diversao.SuspendLayout();
             this.Teleporte.SuspendLayout();
             this.Spawner.SuspendLayout();
+            this.Dinheiro.SuspendLayout();
             this.SuspendLayout();
             // 
             // DragControl
@@ -100,11 +111,6 @@
             this.DragControl.DockIndicatorTransparencyValue = 0.6D;
             this.DragControl.TargetControl = this.PanelTop;
             this.DragControl.UseTransparentDrag = true;
-            // 
-            // Elipse
-            // 
-            this.Elipse.BorderRadius = 15;
-            this.Elipse.TargetControl = this;
             // 
             // PanelTop
             // 
@@ -162,9 +168,14 @@
             this.guna2HtmlLabel1.Location = new System.Drawing.Point(14, 16);
             this.guna2HtmlLabel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.guna2HtmlLabel1.Name = "guna2HtmlLabel1";
-            this.guna2HtmlLabel1.Size = new System.Drawing.Size(255, 18);
+            this.guna2HtmlLabel1.Size = new System.Drawing.Size(219, 18);
             this.guna2HtmlLabel1.TabIndex = 0;
             this.guna2HtmlLabel1.Text = "GTA V Mod Menu by 5pedrowx1";
+            // 
+            // Elipse
+            // 
+            this.Elipse.BorderRadius = 15;
+            this.Elipse.TargetControl = this;
             // 
             // TabControl
             // 
@@ -177,6 +188,7 @@
             this.TabControl.Controls.Add(this.Diversao);
             this.TabControl.Controls.Add(this.Teleporte);
             this.TabControl.Controls.Add(this.Spawner);
+            this.TabControl.Controls.Add(this.Dinheiro);
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Font = new System.Drawing.Font("MS Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TabControl.ItemSize = new System.Drawing.Size(180, 40);
@@ -275,7 +287,7 @@
             this.lblPedsCrazy.ForeColor = System.Drawing.Color.White;
             this.lblPedsCrazy.Location = new System.Drawing.Point(90, 63);
             this.lblPedsCrazy.Name = "lblPedsCrazy";
-            this.lblPedsCrazy.Size = new System.Drawing.Size(104, 15);
+            this.lblPedsCrazy.Size = new System.Drawing.Size(108, 15);
             this.lblPedsCrazy.TabIndex = 0;
             this.lblPedsCrazy.Text = "Peds Agressivos";
             // 
@@ -298,6 +310,22 @@
             this.Player.TabIndex = 1;
             this.Player.Text = "PLAYER";
             // 
+            // btnCurarPlayer
+            // 
+            this.btnCurarPlayer.BorderRadius = 8;
+            this.btnCurarPlayer.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnCurarPlayer.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnCurarPlayer.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnCurarPlayer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnCurarPlayer.FillColor = System.Drawing.Color.Purple;
+            this.btnCurarPlayer.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.btnCurarPlayer.ForeColor = System.Drawing.Color.White;
+            this.btnCurarPlayer.Location = new System.Drawing.Point(30, 240);
+            this.btnCurarPlayer.Name = "btnCurarPlayer";
+            this.btnCurarPlayer.Size = new System.Drawing.Size(200, 45);
+            this.btnCurarPlayer.TabIndex = 7;
+            this.btnCurarPlayer.Text = "Curar Completamente";
+            // 
             // trackBarVida
             // 
             this.trackBarVida.Location = new System.Drawing.Point(30, 195);
@@ -315,7 +343,7 @@
             this.lblVida.ForeColor = System.Drawing.Color.White;
             this.lblVida.Location = new System.Drawing.Point(30, 168);
             this.lblVida.Name = "lblVida";
-            this.lblVida.Size = new System.Drawing.Size(88, 15);
+            this.lblVida.Size = new System.Drawing.Size(94, 15);
             this.lblVida.TabIndex = 5;
             this.lblVida.Text = "Vida: 100/200";
             // 
@@ -342,7 +370,7 @@
             this.lblGodMode.ForeColor = System.Drawing.Color.White;
             this.lblGodMode.Location = new System.Drawing.Point(90, 43);
             this.lblGodMode.Name = "lblGodMode";
-            this.lblGodMode.Size = new System.Drawing.Size(112, 15);
+            this.lblGodMode.Size = new System.Drawing.Size(108, 15);
             this.lblGodMode.TabIndex = 3;
             this.lblGodMode.Text = "Modo Invencível";
             // 
@@ -369,25 +397,9 @@
             this.lblStamina.ForeColor = System.Drawing.Color.White;
             this.lblStamina.Location = new System.Drawing.Point(90, 93);
             this.lblStamina.Name = "lblStamina";
-            this.lblStamina.Size = new System.Drawing.Size(112, 15);
+            this.lblStamina.Size = new System.Drawing.Size(115, 15);
             this.lblStamina.TabIndex = 1;
             this.lblStamina.Text = "Stamina Infinita";
-            // 
-            // btnCurarPlayer
-            // 
-            this.btnCurarPlayer.BorderRadius = 8;
-            this.btnCurarPlayer.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnCurarPlayer.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnCurarPlayer.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnCurarPlayer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnCurarPlayer.FillColor = System.Drawing.Color.Purple;
-            this.btnCurarPlayer.Font = new System.Drawing.Font("MS Gothic", 10F);
-            this.btnCurarPlayer.ForeColor = System.Drawing.Color.White;
-            this.btnCurarPlayer.Location = new System.Drawing.Point(30, 240);
-            this.btnCurarPlayer.Name = "btnCurarPlayer";
-            this.btnCurarPlayer.Size = new System.Drawing.Size(200, 45);
-            this.btnCurarPlayer.TabIndex = 7;
-            this.btnCurarPlayer.Text = "Curar Completamente";
             // 
             // Veiculos
             // 
@@ -404,6 +416,27 @@
             this.Veiculos.Size = new System.Drawing.Size(745, 391);
             this.Veiculos.TabIndex = 2;
             this.Veiculos.Text = "VEÍCULOS";
+            // 
+            // trackBarVelocidade
+            // 
+            this.trackBarVelocidade.Location = new System.Drawing.Point(30, 180);
+            this.trackBarVelocidade.Maximum = 300;
+            this.trackBarVelocidade.Name = "trackBarVelocidade";
+            this.trackBarVelocidade.Size = new System.Drawing.Size(300, 23);
+            this.trackBarVelocidade.TabIndex = 6;
+            this.trackBarVelocidade.ThumbColor = System.Drawing.Color.Purple;
+            this.trackBarVelocidade.Value = 100;
+            // 
+            // lblVelocidade
+            // 
+            this.lblVelocidade.BackColor = System.Drawing.Color.Transparent;
+            this.lblVelocidade.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.lblVelocidade.ForeColor = System.Drawing.Color.White;
+            this.lblVelocidade.Location = new System.Drawing.Point(30, 155);
+            this.lblVelocidade.Name = "lblVelocidade";
+            this.lblVelocidade.Size = new System.Drawing.Size(164, 15);
+            this.lblVelocidade.TabIndex = 5;
+            this.lblVelocidade.Text = "Velocidade Máxima: 100%";
             // 
             // btnRepararVeiculo
             // 
@@ -444,30 +477,9 @@
             this.lblVeiculoIndestrutivel.ForeColor = System.Drawing.Color.White;
             this.lblVeiculoIndestrutivel.Location = new System.Drawing.Point(90, 43);
             this.lblVeiculoIndestrutivel.Name = "lblVeiculoIndestrutivel";
-            this.lblVeiculoIndestrutivel.Size = new System.Drawing.Size(144, 15);
+            this.lblVeiculoIndestrutivel.Size = new System.Drawing.Size(150, 15);
             this.lblVeiculoIndestrutivel.TabIndex = 2;
             this.lblVeiculoIndestrutivel.Text = "Veículo Indestrutível";
-            // 
-            // trackBarVelocidade
-            // 
-            this.trackBarVelocidade.Location = new System.Drawing.Point(30, 180);
-            this.trackBarVelocidade.Maximum = 300;
-            this.trackBarVelocidade.Name = "trackBarVelocidade";
-            this.trackBarVelocidade.Size = new System.Drawing.Size(300, 23);
-            this.trackBarVelocidade.TabIndex = 6;
-            this.trackBarVelocidade.ThumbColor = System.Drawing.Color.Purple;
-            this.trackBarVelocidade.Value = 100;
-            // 
-            // lblVelocidade
-            // 
-            this.lblVelocidade.BackColor = System.Drawing.Color.Transparent;
-            this.lblVelocidade.Font = new System.Drawing.Font("MS Gothic", 10F);
-            this.lblVelocidade.ForeColor = System.Drawing.Color.White;
-            this.lblVelocidade.Location = new System.Drawing.Point(30, 155);
-            this.lblVelocidade.Name = "lblVelocidade";
-            this.lblVelocidade.Size = new System.Drawing.Size(176, 15);
-            this.lblVelocidade.TabIndex = 5;
-            this.lblVelocidade.Text = "Velocidade Máxima: 100%";
             // 
             // Armas
             // 
@@ -524,7 +536,7 @@
             this.lblMunicaoInfinita.ForeColor = System.Drawing.Color.White;
             this.lblMunicaoInfinita.Location = new System.Drawing.Point(90, 43);
             this.lblMunicaoInfinita.Name = "lblMunicaoInfinita";
-            this.lblMunicaoInfinita.Size = new System.Drawing.Size(120, 15);
+            this.lblMunicaoInfinita.Size = new System.Drawing.Size(115, 15);
             this.lblMunicaoInfinita.TabIndex = 2;
             this.lblMunicaoInfinita.Text = "Munição Infinita";
             // 
@@ -551,7 +563,7 @@
             this.lblSemRecarga.ForeColor = System.Drawing.Color.White;
             this.lblSemRecarga.Location = new System.Drawing.Point(90, 93);
             this.lblSemRecarga.Name = "lblSemRecarga";
-            this.lblSemRecarga.Size = new System.Drawing.Size(88, 15);
+            this.lblSemRecarga.Size = new System.Drawing.Size(80, 15);
             this.lblSemRecarga.TabIndex = 0;
             this.lblSemRecarga.Text = "Sem Recarga";
             // 
@@ -604,7 +616,7 @@
             this.lblClima.ForeColor = System.Drawing.Color.White;
             this.lblClima.Location = new System.Drawing.Point(30, 155);
             this.lblClima.Name = "lblClima";
-            this.lblClima.Size = new System.Drawing.Size(40, 15);
+            this.lblClima.Size = new System.Drawing.Size(38, 15);
             this.lblClima.TabIndex = 4;
             this.lblClima.Text = "Clima";
             // 
@@ -652,7 +664,7 @@
             this.lblCongelarTempo.ForeColor = System.Drawing.Color.White;
             this.lblCongelarTempo.Location = new System.Drawing.Point(90, 43);
             this.lblCongelarTempo.Name = "lblCongelarTempo";
-            this.lblCongelarTempo.Size = new System.Drawing.Size(104, 15);
+            this.lblCongelarTempo.Size = new System.Drawing.Size(101, 15);
             this.lblCongelarTempo.TabIndex = 0;
             this.lblCongelarTempo.Text = "Congelar Tempo";
             // 
@@ -796,7 +808,7 @@
             this.lblLocais.ForeColor = System.Drawing.Color.White;
             this.lblLocais.Location = new System.Drawing.Point(30, 40);
             this.lblLocais.Name = "lblLocais";
-            this.lblLocais.Size = new System.Drawing.Size(112, 15);
+            this.lblLocais.Size = new System.Drawing.Size(115, 15);
             this.lblLocais.TabIndex = 0;
             this.lblLocais.Text = "Locais Populares";
             // 
@@ -832,7 +844,6 @@
             this.txtSpawnModel.HoverState.BorderColor = System.Drawing.Color.Purple;
             this.txtSpawnModel.Location = new System.Drawing.Point(30, 70);
             this.txtSpawnModel.Name = "txtSpawnModel";
-            this.txtSpawnModel.PasswordChar = '\0';
             this.txtSpawnModel.PlaceholderForeColor = System.Drawing.Color.Gray;
             this.txtSpawnModel.PlaceholderText = "Ex: adder, sultan, etc.";
             this.txtSpawnModel.SelectedText = "";
@@ -846,7 +857,7 @@
             this.lblSpawnModel.ForeColor = System.Drawing.Color.White;
             this.lblSpawnModel.Location = new System.Drawing.Point(30, 40);
             this.lblSpawnModel.Name = "lblSpawnModel";
-            this.lblSpawnModel.Size = new System.Drawing.Size(136, 15);
+            this.lblSpawnModel.Size = new System.Drawing.Size(129, 15);
             this.lblSpawnModel.TabIndex = 2;
             this.lblSpawnModel.Text = "Nome do Modelo/Ped";
             // 
@@ -882,6 +893,161 @@
             this.btnSpawnPed.TabIndex = 0;
             this.btnSpawnPed.Text = "Spawn Ped";
             // 
+            // Dinheiro
+            // 
+            this.Dinheiro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.Dinheiro.Controls.Add(this.btnAdd1M);
+            this.Dinheiro.Controls.Add(this.btnAdd100k);
+            this.Dinheiro.Controls.Add(this.btnAdd10k);
+            this.Dinheiro.Controls.Add(this.btnSetDinheiro);
+            this.Dinheiro.Controls.Add(this.btnAddDinheiro);
+            this.Dinheiro.Controls.Add(this.txtValorDinheiro);
+            this.Dinheiro.Controls.Add(this.lblValorInput);
+            this.Dinheiro.Controls.Add(this.lblValorDinheiro);
+            this.Dinheiro.Controls.Add(this.lblDinheiroAtual);
+            this.Dinheiro.ForeColor = System.Drawing.Color.White;
+            this.Dinheiro.Location = new System.Drawing.Point(184, 4);
+            this.Dinheiro.Name = "Dinheiro";
+            this.Dinheiro.Size = new System.Drawing.Size(745, 391);
+            this.Dinheiro.TabIndex = 8;
+            this.Dinheiro.Text = "DINHEIRO";
+            // 
+            // btnAdd1M
+            // 
+            this.btnAdd1M.BorderRadius = 8;
+            this.btnAdd1M.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnAdd1M.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnAdd1M.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnAdd1M.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnAdd1M.FillColor = System.Drawing.Color.Gold;
+            this.btnAdd1M.Font = new System.Drawing.Font("MS Gothic", 9F, System.Drawing.FontStyle.Bold);
+            this.btnAdd1M.ForeColor = System.Drawing.Color.Black;
+            this.btnAdd1M.Location = new System.Drawing.Point(240, 260);
+            this.btnAdd1M.Name = "btnAdd1M";
+            this.btnAdd1M.Size = new System.Drawing.Size(104, 45);
+            this.btnAdd1M.TabIndex = 8;
+            this.btnAdd1M.Text = "+$1,000,000";
+            // 
+            // btnAdd100k
+            // 
+            this.btnAdd100k.BorderRadius = 8;
+            this.btnAdd100k.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnAdd100k.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnAdd100k.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnAdd100k.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnAdd100k.FillColor = System.Drawing.Color.DarkMagenta;
+            this.btnAdd100k.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.btnAdd100k.ForeColor = System.Drawing.Color.White;
+            this.btnAdd100k.Location = new System.Drawing.Point(135, 260);
+            this.btnAdd100k.Name = "btnAdd100k";
+            this.btnAdd100k.Size = new System.Drawing.Size(95, 45);
+            this.btnAdd100k.TabIndex = 7;
+            this.btnAdd100k.Text = "+$100,000";
+            // 
+            // btnAdd10k
+            // 
+            this.btnAdd10k.BorderRadius = 8;
+            this.btnAdd10k.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnAdd10k.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnAdd10k.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnAdd10k.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnAdd10k.FillColor = System.Drawing.Color.Purple;
+            this.btnAdd10k.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.btnAdd10k.ForeColor = System.Drawing.Color.White;
+            this.btnAdd10k.Location = new System.Drawing.Point(30, 260);
+            this.btnAdd10k.Name = "btnAdd10k";
+            this.btnAdd10k.Size = new System.Drawing.Size(95, 45);
+            this.btnAdd10k.TabIndex = 6;
+            this.btnAdd10k.Text = "+$10,000";
+            // 
+            // btnSetDinheiro
+            // 
+            this.btnSetDinheiro.BorderRadius = 8;
+            this.btnSetDinheiro.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnSetDinheiro.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnSetDinheiro.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnSetDinheiro.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnSetDinheiro.FillColor = System.Drawing.Color.DarkOrange;
+            this.btnSetDinheiro.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.btnSetDinheiro.ForeColor = System.Drawing.Color.White;
+            this.btnSetDinheiro.Location = new System.Drawing.Point(135, 190);
+            this.btnSetDinheiro.Name = "btnSetDinheiro";
+            this.btnSetDinheiro.Size = new System.Drawing.Size(95, 45);
+            this.btnSetDinheiro.TabIndex = 5;
+            this.btnSetDinheiro.Text = "Definir";
+            // 
+            // btnAddDinheiro
+            // 
+            this.btnAddDinheiro.BorderRadius = 8;
+            this.btnAddDinheiro.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnAddDinheiro.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnAddDinheiro.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnAddDinheiro.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnAddDinheiro.FillColor = System.Drawing.Color.Green;
+            this.btnAddDinheiro.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.btnAddDinheiro.ForeColor = System.Drawing.Color.White;
+            this.btnAddDinheiro.Location = new System.Drawing.Point(30, 190);
+            this.btnAddDinheiro.Name = "btnAddDinheiro";
+            this.btnAddDinheiro.Size = new System.Drawing.Size(95, 45);
+            this.btnAddDinheiro.TabIndex = 4;
+            this.btnAddDinheiro.Text = "Adicionar";
+            // 
+            // txtValorDinheiro
+            // 
+            this.txtValorDinheiro.BorderColor = System.Drawing.Color.Purple;
+            this.txtValorDinheiro.BorderRadius = 8;
+            this.txtValorDinheiro.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtValorDinheiro.DefaultText = "10000";
+            this.txtValorDinheiro.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtValorDinheiro.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtValorDinheiro.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtValorDinheiro.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtValorDinheiro.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.txtValorDinheiro.FocusedState.BorderColor = System.Drawing.Color.Purple;
+            this.txtValorDinheiro.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.txtValorDinheiro.ForeColor = System.Drawing.Color.White;
+            this.txtValorDinheiro.HoverState.BorderColor = System.Drawing.Color.Purple;
+            this.txtValorDinheiro.Location = new System.Drawing.Point(30, 135);
+            this.txtValorDinheiro.Name = "txtValorDinheiro";
+            this.txtValorDinheiro.PlaceholderForeColor = System.Drawing.Color.Gray;
+            this.txtValorDinheiro.PlaceholderText = "Digite o valor";
+            this.txtValorDinheiro.SelectedText = "";
+            this.txtValorDinheiro.Size = new System.Drawing.Size(200, 40);
+            this.txtValorDinheiro.TabIndex = 3;
+            // 
+            // lblValorInput
+            // 
+            this.lblValorInput.BackColor = System.Drawing.Color.Transparent;
+            this.lblValorInput.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.lblValorInput.ForeColor = System.Drawing.Color.White;
+            this.lblValorInput.Location = new System.Drawing.Point(30, 110);
+            this.lblValorInput.Name = "lblValorInput";
+            this.lblValorInput.Size = new System.Drawing.Size(73, 15);
+            this.lblValorInput.TabIndex = 2;
+            this.lblValorInput.Text = "Valor ($):";
+            // 
+            // lblValorDinheiro
+            // 
+            this.lblValorDinheiro.BackColor = System.Drawing.Color.Transparent;
+            this.lblValorDinheiro.Font = new System.Drawing.Font("MS Gothic", 14F, System.Drawing.FontStyle.Bold);
+            this.lblValorDinheiro.ForeColor = System.Drawing.Color.Lime;
+            this.lblValorDinheiro.Location = new System.Drawing.Point(30, 60);
+            this.lblValorDinheiro.Name = "lblValorDinheiro";
+            this.lblValorDinheiro.Size = new System.Drawing.Size(25, 21);
+            this.lblValorDinheiro.TabIndex = 1;
+            this.lblValorDinheiro.Text = "$0";
+            // 
+            // lblDinheiroAtual
+            // 
+            this.lblDinheiroAtual.BackColor = System.Drawing.Color.Transparent;
+            this.lblDinheiroAtual.Font = new System.Drawing.Font("MS Gothic", 10F);
+            this.lblDinheiroAtual.ForeColor = System.Drawing.Color.White;
+            this.lblDinheiroAtual.Location = new System.Drawing.Point(30, 40);
+            this.lblDinheiroAtual.Name = "lblDinheiroAtual";
+            this.lblDinheiroAtual.Size = new System.Drawing.Size(108, 15);
+            this.lblDinheiroAtual.TabIndex = 0;
+            this.lblDinheiroAtual.Text = "Dinheiro Atual:";
+            // 
             // ShadowForm
             // 
             this.ShadowForm.BorderRadius = 15;
@@ -900,9 +1066,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "MainForm";
-            this.TopMost = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GTA V Mod Menu by 5pedrowx1";
+            this.TopMost = true;
             this.PanelTop.ResumeLayout(false);
             this.PanelTop.PerformLayout();
             this.TabControl.ResumeLayout(false);
@@ -921,7 +1087,10 @@
             this.Teleporte.PerformLayout();
             this.Spawner.ResumeLayout(false);
             this.Spawner.PerformLayout();
+            this.Dinheiro.ResumeLayout(false);
+            this.Dinheiro.PerformLayout();
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -975,6 +1144,16 @@
         private System.Windows.Forms.ListBox listBoxLocais;
         private Guna.UI2.WinForms.Guna2HtmlLabel lblLocais;
         private System.Windows.Forms.TabPage Spawner;
+        private System.Windows.Forms.TabPage Dinheiro;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblDinheiroAtual;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblValorDinheiro;
+        private Guna.UI2.WinForms.Guna2TextBox txtValorDinheiro;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblValorInput;
+        private Guna.UI2.WinForms.Guna2Button btnAddDinheiro;
+        private Guna.UI2.WinForms.Guna2Button btnSetDinheiro;
+        private Guna.UI2.WinForms.Guna2Button btnAdd10k;
+        private Guna.UI2.WinForms.Guna2Button btnAdd100k;
+        private Guna.UI2.WinForms.Guna2Button btnAdd1M;
         private Guna.UI2.WinForms.Guna2TextBox txtSpawnModel;
         private Guna.UI2.WinForms.Guna2HtmlLabel lblSpawnModel;
         private Guna.UI2.WinForms.Guna2Button btnSpawnVeiculo;

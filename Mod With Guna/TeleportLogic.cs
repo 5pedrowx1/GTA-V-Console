@@ -21,6 +21,12 @@ namespace Mod_With_Guna
             new Vector3(-75.0f, -818.0f, 326.0f)       // Maze Bank Tower
         };
 
+        // Variáveis para controlar o teleporte assíncrono
+        private bool shouldTeleport = false;
+        private int teleportStage = 0;
+        private Vector3 waypointPos;
+        private int waitTimer = 0;
+
         public void TeleportToLocation(int locationIndex)
         {
             if (locationIndex >= 0 && locationIndex < popularLocations.Length)
@@ -37,60 +43,89 @@ namespace Mod_With_Guna
                     Game.Player.Character.Position = destination;
                 }
 
-                Notification.Show("~g~Teleportado com Sucesso!");
+                Notification.PostTicker("~g~Teleportado com Sucesso!", true);
             }
         }
 
+        // Método chamado pelo botão (não usa Wait)
         public void TeleportToWaypoint()
         {
-            // Verificar se existe um waypoint ativo
             if (!Function.Call<bool>(Hash.IS_WAYPOINT_ACTIVE))
             {
-                Notification.Show("~r~Nenhum Waypoint Definido!");
+                Notification.PostTicker("~r~Nenhum Waypoint Definido!", true);
                 return;
             }
 
-            // Obter coordenadas do waypoint
-            Vector3 waypointPos = Function.Call<Vector3>(Hash.GET_BLIP_INFO_ID_COORD,
-                Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, 8)); // 8 = waypoint blip
+            // Ativa o processo de teleporte
+            shouldTeleport = true;
+            teleportStage = 0;
+        }
 
-            // Obter a altura do terreno
-            float groundZ = 0f;
-            bool foundGround = false;
+        // Método chamado pelo OnTick do script principal
+        public void Update()
+        {
+            if (!shouldTeleport) return;
 
-            // Requisitar colisão
-            Function.Call(Hash.REQUEST_COLLISION_AT_COORD, waypointPos.X, waypointPos.Y, waypointPos.Z);
-            Script.Wait(100);
-
-            // Tentar obter altura do chão
-            unsafe
+            switch (teleportStage)
             {
-                float z;
-                foundGround = Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD,
-                    waypointPos.X, waypointPos.Y, 1000f, &z, false);
-                if (foundGround)
-                {
-                    groundZ = z;
-                }
-                else
-                {
-                    groundZ = waypointPos.Z;
-                }
-            }
+                case 0: // Início - Obtém coordenadas e teleporta para cima
+                    int blip = Function.Call<int>(Hash.GET_FIRST_BLIP_INFO_ID, 8);
+                    waypointPos = Function.Call<Vector3>(Hash.GET_BLIP_COORDS, blip);
 
-            Vector3 destination = new Vector3(waypointPos.X, waypointPos.Y, groundZ + 1.0f);
+                    // Teleporta para cima primeiro
+                    Vector3 tempPos = new Vector3(waypointPos.X, waypointPos.Y, 1000f);
 
-            if (Game.Player.Character.IsInVehicle())
-            {
-                Vehicle vehicle = Game.Player.Character.CurrentVehicle;
-                vehicle.Position = destination;
-            }
-            else
-            {
-                Game.Player.Character.Position = destination;
-            }
+                    if (Game.Player.Character.IsInVehicle())
+                    {
+                        Game.Player.Character.CurrentVehicle.Position = tempPos;
+                    }
+                    else
+                    {
+                        Game.Player.Character.Position = tempPos;
+                    }
 
-            Notification.Show("~g~Teleportado para o Waypoint!");
+                    // Requisita colisão
+                    Function.Call(Hash.REQUEST_COLLISION_AT_COORD, waypointPos.X, waypointPos.Y, waypointPos.Z);
+
+                    // Define timer para esperar 1 segundo
+                    waitTimer = Game.GameTime + 1000;
+                    teleportStage = 1;
+                    break;
+
+                case 1: // Aguardando área carregar
+                    if (Game.GameTime >= waitTimer)
+                    {
+                        teleportStage = 2;
+                    }
+                    break;
+
+                case 2: // Teleporte final para o chão
+                    float groundZ = 1000f;
+                    OutputArgument outZ = new OutputArgument();
+
+                    if (Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, waypointPos.X, waypointPos.Y, 1000f, outZ, false))
+                    {
+                        groundZ = outZ.GetResult<float>();
+                    }
+
+                    Vector3 finalPos = new Vector3(waypointPos.X, waypointPos.Y, groundZ + 1.5f);
+
+                    if (Game.Player.Character.IsInVehicle())
+                    {
+                        Game.Player.Character.CurrentVehicle.Position = finalPos;
+                    }
+                    else
+                    {
+                        Game.Player.Character.Position = finalPos;
+                    }
+
+                    Notification.PostTicker("~g~Teleportado para o Waypoint!", true);
+
+                    // Reseta o processo
+                    shouldTeleport = false;
+                    teleportStage = 0;
+                    break;
+            }
         }
 
         public void TeleportVehicleToPlayer()
@@ -99,7 +134,7 @@ namespace Mod_With_Guna
 
             if (lastVehicle == null || !lastVehicle.Exists())
             {
-                Notification.Show("~r~Nenhum Veículo Encontrado!");
+                Notification.PostTicker("~r~Nenhum Veículo Encontrado!", true);
                 return;
             }
 
@@ -109,7 +144,7 @@ namespace Mod_With_Guna
             lastVehicle.Position = spawnPos;
             lastVehicle.PlaceOnGround();
 
-            Notification.Show("~g~Veículo Teleportado!");
+            Notification.PostTicker("~g~Veículo Teleportado!", true);
         }
     }
 }
