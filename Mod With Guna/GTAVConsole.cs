@@ -1,11 +1,10 @@
 ﻿using GTA;
 using GTA.UI;
-using Mod_With_Guna;
 using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Console_With_Windows_Forms
+namespace Mod_With_Guna
 {
     public class GTAVConsole : Script
     {
@@ -25,12 +24,12 @@ namespace Console_With_Windows_Forms
             consoleThread.Start();
 
             KeyDown += OnKeyDown;
-            Notification.Show("~y~GTAV Mod Menu by 5pedrowx1~w~ carregado! Pressiona ~b~F10~w~ para abrir.");
+            Notification.Show("~y~GTAV Mod Menu by 5pedrowx1~w~ carregado! Pressiona ~b~Insert~w~ para abrir.");
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F10 && consoleForm != null && consoleForm.IsHandleCreated)
+            if (e.KeyCode == Keys.Insert && consoleForm != null && consoleForm.IsHandleCreated)
             {
                 consoleForm.Invoke(new Action(() =>
                 {
