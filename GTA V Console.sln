@@ -4,6 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTA V Console", "GTA V Console\GTA V Console.csproj", "{B51AEA99-12A3-4E4E-A81F-CCA033080CC3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E7F4BEC-CCE0-4A75-B8E9-5243E9BD509C} = {0E7F4BEC-CCE0-4A75-B8E9-5243E9BD509C}
+		{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154} = {28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}
+		{8F7414BB-8A2F-4877-8F0C-9EE9E199DA03} = {8F7414BB-8A2F-4877-8F0C-9EE9E199DA03}
+		{C9081C56-17AA-4C02-A4C0-8F13F5EF09D0} = {C9081C56-17AA-4C02-A4C0-8F13F5EF09D0}
+		{EBB12153-5BB2-40C1-A513-A6F991FBB68C} = {EBB12153-5BB2-40C1-A513-A6F991FBB68C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHook_GTA5_Injector", "ScriptHook_GTA5_Injector\ScriptHook_GTA5_Injector.csproj", "{EBB12153-5BB2-40C1-A513-A6F991FBB68C}"
 EndProject
@@ -12,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Injector UI", "Injector UI\Injector UI.csproj", "{28703ECD-7ECD-4BBE-9B66-D26ADAF8A154}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{0E7F4BEC-CCE0-4A75-B8E9-5243E9BD509C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mod With Guna", "Mod With Guna\Mod With Guna.csproj", "{8F7414BB-8A2F-4877-8F0C-9EE9E199DA03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +48,10 @@ Global
 		{0E7F4BEC-CCE0-4A75-B8E9-5243E9BD509C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E7F4BEC-CCE0-4A75-B8E9-5243E9BD509C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E7F4BEC-CCE0-4A75-B8E9-5243E9BD509C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F7414BB-8A2F-4877-8F0C-9EE9E199DA03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F7414BB-8A2F-4877-8F0C-9EE9E199DA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F7414BB-8A2F-4877-8F0C-9EE9E199DA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F7414BB-8A2F-4877-8F0C-9EE9E199DA03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
