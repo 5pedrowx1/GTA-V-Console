@@ -37,6 +37,14 @@ namespace Updater
             DisableFileLog = args.Any(a => a.Equals("--no-filelog", StringComparison.OrdinalIgnoreCase));
             bool skipAppLaunch = args.Any(a => a.Equals("--no-launch", StringComparison.OrdinalIgnoreCase));
             bool doNotCleanup = args.Any(a => a.Equals("--no-cleanup", StringComparison.OrdinalIgnoreCase));
+            bool silentMode = args.Any(a => a.Equals("--silent", StringComparison.OrdinalIgnoreCase));
+
+            if (silentMode)
+            {
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+                this.Opacity = 0; // Oculta visualmente
+            }
 
             string? customAppArgs = args
                 .Where(a => a.StartsWith("--app-args=", StringComparison.OrdinalIgnoreCase))
